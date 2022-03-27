@@ -3,3 +3,198 @@
 
 
 
+/.metadata/
+.jxbrowser.userdata/BrowserMetrics-spare.pma
+.jxbrowser.userdata/First Run
+.jxbrowser.userdata/Last Browser
+.jxbrowser.userdata/Last Version
+.jxbrowser.userdata/Local State
+.jxbrowser.userdata/Module Info Cache
+.jxbrowser.userdata/BrowserMetrics/BrowserMetrics-623BE2EC-1450.pma
+.jxbrowser.userdata/CertificateRevocation/7233/crl-set
+.jxbrowser.userdata/CertificateRevocation/7233/LICENSE
+.jxbrowser.userdata/CertificateRevocation/7233/manifest.fingerprint
+.jxbrowser.userdata/CertificateRevocation/7233/manifest.json
+.jxbrowser.userdata/CertificateRevocation/7233/_metadata/verified_contents.json
+.jxbrowser.userdata/Crowd Deny/2022.3.14.1147/manifest.fingerprint
+.jxbrowser.userdata/Crowd Deny/2022.3.14.1147/manifest.json
+.jxbrowser.userdata/Crowd Deny/2022.3.14.1147/Preload Data
+.jxbrowser.userdata/Crowd Deny/2022.3.14.1147/_metadata/verified_contents.json
+.jxbrowser.userdata/Default/Cookies
+.jxbrowser.userdata/Default/Cookies-journal
+.jxbrowser.userdata/Default/Current Session
+.jxbrowser.userdata/Default/Current Tabs
+.jxbrowser.userdata/Default/Favicons
+.jxbrowser.userdata/Default/Favicons-journal
+.jxbrowser.userdata/Default/heavy_ad_intervention_opt_out.db
+.jxbrowser.userdata/Default/heavy_ad_intervention_opt_out.db-journal
+.jxbrowser.userdata/Default/History
+.jxbrowser.userdata/Default/History-journal
+.jxbrowser.userdata/Default/LOCK
+.jxbrowser.userdata/Default/LOG
+.jxbrowser.userdata/Default/Login Data
+.jxbrowser.userdata/Default/Login Data-journal
+.jxbrowser.userdata/Default/Media History
+.jxbrowser.userdata/Default/Media History-journal
+.jxbrowser.userdata/Default/Network Action Predictor
+.jxbrowser.userdata/Default/Network Action Predictor-journal
+.jxbrowser.userdata/Default/Network Persistent State
+.jxbrowser.userdata/Default/Preferences
+.jxbrowser.userdata/Default/previews_opt_out.db
+.jxbrowser.userdata/Default/previews_opt_out.db-journal
+.jxbrowser.userdata/Default/README
+.jxbrowser.userdata/Default/Secure Preferences
+.jxbrowser.userdata/Default/Shortcuts
+.jxbrowser.userdata/Default/Shortcuts-journal
+.jxbrowser.userdata/Default/Top Sites
+.jxbrowser.userdata/Default/Top Sites-journal
+.jxbrowser.userdata/Default/Visited Links
+.jxbrowser.userdata/Default/Web Data
+.jxbrowser.userdata/Default/Web Data-journal
+.jxbrowser.userdata/Default/AutofillStrikeDatabase/LOCK
+.jxbrowser.userdata/Default/AutofillStrikeDatabase/LOG
+.jxbrowser.userdata/Default/BudgetDatabase/LOCK
+.jxbrowser.userdata/Default/BudgetDatabase/LOG
+.jxbrowser.userdata/Default/Cache/data_0
+.jxbrowser.userdata/Default/Cache/data_1
+.jxbrowser.userdata/Default/Cache/data_2
+.jxbrowser.userdata/Default/Cache/data_3
+.jxbrowser.userdata/Default/Cache/f_000001
+.jxbrowser.userdata/Default/Cache/f_000002
+.jxbrowser.userdata/Default/Cache/f_000003
+.jxbrowser.userdata/Default/Cache/f_000004
+.jxbrowser.userdata/Default/Cache/index
+.jxbrowser.userdata/Default/Code Cache/js/15c203d3acb3df4c_0
+.jxbrowser.userdata/Default/Code Cache/js/1924ff17c8794111_0
+.jxbrowser.userdata/Default/Code Cache/js/4f64f28972e99628_0
+.jxbrowser.userdata/Default/Code Cache/js/6a86c39bc2ff6bb2_0
+.jxbrowser.userdata/Default/Code Cache/js/777d01c0f8fb75c0_0
+.jxbrowser.userdata/Default/Code Cache/js/84dd0d39d6effc44_0
+.jxbrowser.userdata/Default/Code Cache/js/92cb6a13aabd08db_0
+.jxbrowser.userdata/Default/Code Cache/js/a03e258230865b3a_0
+.jxbrowser.userdata/Default/Code Cache/js/a0a0791183faeb1d_0
+.jxbrowser.userdata/Default/Code Cache/js/ba3b292840a26f6d_0
+.jxbrowser.userdata/Default/Code Cache/js/c9185418dd5855b7_0
+.jxbrowser.userdata/Default/Code Cache/js/db110aa5c3c3f0d4_0
+.jxbrowser.userdata/Default/Code Cache/js/fbb6875ab63228a3_0
+.jxbrowser.userdata/Default/Code Cache/js/index
+.jxbrowser.userdata/Default/Code Cache/js/index-dir/the-real-index
+.jxbrowser.userdata/Default/Code Cache/wasm/index
+.jxbrowser.userdata/Default/Code Cache/wasm/index-dir/the-real-index
+.jxbrowser.userdata/Default/data_reduction_proxy_leveldb/000003.log
+.jxbrowser.userdata/Default/data_reduction_proxy_leveldb/CURRENT
+.jxbrowser.userdata/Default/data_reduction_proxy_leveldb/LOCK
+.jxbrowser.userdata/Default/data_reduction_proxy_leveldb/LOG
+.jxbrowser.userdata/Default/data_reduction_proxy_leveldb/MANIFEST-000002
+.jxbrowser.userdata/Default/Extension State/000003.log
+.jxbrowser.userdata/Default/Extension State/CURRENT
+.jxbrowser.userdata/Default/Extension State/LOCK
+.jxbrowser.userdata/Default/Extension State/LOG
+.jxbrowser.userdata/Default/Extension State/MANIFEST-000001
+.jxbrowser.userdata/Default/Feature Engagement Tracker/AvailabilityDB/LOCK
+.jxbrowser.userdata/Default/Feature Engagement Tracker/AvailabilityDB/LOG
+.jxbrowser.userdata/Default/Feature Engagement Tracker/EventDB/LOCK
+.jxbrowser.userdata/Default/Feature Engagement Tracker/EventDB/LOG
+.jxbrowser.userdata/Default/GCM Store/Encryption/000003.log
+.jxbrowser.userdata/Default/GCM Store/Encryption/CURRENT
+.jxbrowser.userdata/Default/GCM Store/Encryption/LOCK
+.jxbrowser.userdata/Default/GCM Store/Encryption/LOG
+.jxbrowser.userdata/Default/GCM Store/Encryption/MANIFEST-000001
+.jxbrowser.userdata/Default/GPUCache/data_0
+.jxbrowser.userdata/Default/GPUCache/data_1
+.jxbrowser.userdata/Default/GPUCache/data_2
+.jxbrowser.userdata/Default/GPUCache/data_3
+.jxbrowser.userdata/Default/GPUCache/index
+.jxbrowser.userdata/Default/Local Storage/leveldb/000003.log
+.jxbrowser.userdata/Default/Local Storage/leveldb/CURRENT
+.jxbrowser.userdata/Default/Local Storage/leveldb/LOCK
+.jxbrowser.userdata/Default/Local Storage/leveldb/LOG
+.jxbrowser.userdata/Default/Local Storage/leveldb/MANIFEST-000001
+.jxbrowser.userdata/Default/Platform Notifications/000003.log
+.jxbrowser.userdata/Default/Platform Notifications/CURRENT
+.jxbrowser.userdata/Default/Platform Notifications/LOCK
+.jxbrowser.userdata/Default/Platform Notifications/LOG
+.jxbrowser.userdata/Default/Platform Notifications/MANIFEST-000001
+.jxbrowser.userdata/Default/Session Storage/000003.log
+.jxbrowser.userdata/Default/Session Storage/CURRENT
+.jxbrowser.userdata/Default/Session Storage/LOCK
+.jxbrowser.userdata/Default/Session Storage/LOG
+.jxbrowser.userdata/Default/Session Storage/MANIFEST-000001
+.jxbrowser.userdata/Default/shared_proto_db/000003.log
+.jxbrowser.userdata/Default/shared_proto_db/CURRENT
+.jxbrowser.userdata/Default/shared_proto_db/LOCK
+.jxbrowser.userdata/Default/shared_proto_db/LOG
+.jxbrowser.userdata/Default/shared_proto_db/MANIFEST-000001
+.jxbrowser.userdata/Default/shared_proto_db/metadata/000003.log
+.jxbrowser.userdata/Default/shared_proto_db/metadata/CURRENT
+.jxbrowser.userdata/Default/shared_proto_db/metadata/LOCK
+.jxbrowser.userdata/Default/shared_proto_db/metadata/LOG
+.jxbrowser.userdata/Default/shared_proto_db/metadata/MANIFEST-000001
+.jxbrowser.userdata/Default/Site Characteristics Database/000003.log
+.jxbrowser.userdata/Default/Site Characteristics Database/CURRENT
+.jxbrowser.userdata/Default/Site Characteristics Database/LOCK
+.jxbrowser.userdata/Default/Site Characteristics Database/LOG
+.jxbrowser.userdata/Default/Site Characteristics Database/MANIFEST-000001
+.jxbrowser.userdata/Default/Sync Data/LevelDB/000003.log
+.jxbrowser.userdata/Default/Sync Data/LevelDB/CURRENT
+.jxbrowser.userdata/Default/Sync Data/LevelDB/LOCK
+.jxbrowser.userdata/Default/Sync Data/LevelDB/LOG
+.jxbrowser.userdata/Default/Sync Data/LevelDB/MANIFEST-000001
+.jxbrowser.userdata/ECSerivceProvidersConfig/1/manifest.fingerprint
+.jxbrowser.userdata/ECSerivceProvidersConfig/1/manifest.json
+.jxbrowser.userdata/ECSerivceProvidersConfig/1/service_providers.json
+.jxbrowser.userdata/ECSerivceProvidersConfig/1/_metadata/verified_contents.json
+.jxbrowser.userdata/FileTypePolicies/48/download_file_types.pb
+.jxbrowser.userdata/FileTypePolicies/48/manifest.fingerprint
+.jxbrowser.userdata/FileTypePolicies/48/manifest.json
+.jxbrowser.userdata/FileTypePolicies/48/_metadata/verified_contents.json
+.jxbrowser.userdata/GrShaderCache/GPUCache/data_0
+.jxbrowser.userdata/GrShaderCache/GPUCache/data_1
+.jxbrowser.userdata/GrShaderCache/GPUCache/data_2
+.jxbrowser.userdata/GrShaderCache/GPUCache/data_3
+.jxbrowser.userdata/GrShaderCache/GPUCache/index
+.jxbrowser.userdata/Local Storage - EXT/http_127.0.0.1.localstorage
+.jxbrowser.userdata/OriginTrials/1.0.0.13/manifest.fingerprint
+.jxbrowser.userdata/OriginTrials/1.0.0.13/manifest.json
+.jxbrowser.userdata/OriginTrials/1.0.0.13/_metadata/verified_contents.json
+.jxbrowser.userdata/SafetyTips/2787/manifest.fingerprint
+.jxbrowser.userdata/SafetyTips/2787/manifest.json
+.jxbrowser.userdata/SafetyTips/2787/safety_tips.pb
+.jxbrowser.userdata/SafetyTips/2787/_metadata/verified_contents.json
+.jxbrowser.userdata/ShaderCache/GPUCache/data_0
+.jxbrowser.userdata/ShaderCache/GPUCache/data_1
+.jxbrowser.userdata/ShaderCache/GPUCache/data_2
+.jxbrowser.userdata/ShaderCache/GPUCache/data_3
+.jxbrowser.userdata/ShaderCache/GPUCache/index
+.jxbrowser.userdata/SSLErrorAssistant/7/manifest.fingerprint
+.jxbrowser.userdata/SSLErrorAssistant/7/manifest.json
+.jxbrowser.userdata/SSLErrorAssistant/7/ssl_error_assistant.pb
+.jxbrowser.userdata/SSLErrorAssistant/7/_metadata/verified_contents.json
+.jxbrowser.userdata/Subresource Filter/Indexed Rules/27/9.34.0/Ruleset Data
+.jxbrowser.userdata/Subresource Filter/Unindexed Rules/9.34.0/Filtering Rules
+.jxbrowser.userdata/Subresource Filter/Unindexed Rules/9.34.0/LICENSE.txt
+.jxbrowser.userdata/Subresource Filter/Unindexed Rules/9.34.0/manifest.fingerprint
+.jxbrowser.userdata/Subresource Filter/Unindexed Rules/9.34.0/manifest.json
+.jxbrowser.userdata/Subresource Filter/Unindexed Rules/9.34.0/_metadata/verified_contents.json
+.jxbrowser.userdata/TLSDeprecationConfig/4/manifest.fingerprint
+.jxbrowser.userdata/TLSDeprecationConfig/4/manifest.json
+.jxbrowser.userdata/TLSDeprecationConfig/4/tls_deprecation_config.pb
+.jxbrowser.userdata/TLSDeprecationConfig/4/_metadata/verified_contents.json
+.jxbrowser.userdata/WidevineCdm/4.10.2391.0/manifest.fingerprint
+.jxbrowser.userdata/WidevineCdm/4.10.2391.0/manifest.json
+.jxbrowser.userdata/WidevineCdm/4.10.2391.0/_metadata/verified_contents.json
+.jxbrowser.userdata/WidevineCdm/4.10.2391.0/_platform_specific/win_x64/widevinecdm.dll
+.jxbrowser.userdata/WidevineCdm/4.10.2391.0/_platform_specific/win_x64/widevinecdm.dll.sig
+PedometerAssignment/.ccsproject
+PedometerAssignment/.cproject
+PedometerAssignment/.project
+PedometerAssignment/tm4c123gh6pm.cmd
+PedometerAssignment/tm4c123gh6pm_startup_ccs.c
+PedometerAssignment/uartDemo.c
+PedometerAssignment/.launches/PedometerAssignment.launch
+PedometerAssignment/.settings/org.eclipse.cdt.codan.core.prefs
+PedometerAssignment/.settings/org.eclipse.cdt.debug.core.prefs
+PedometerAssignment/.settings/org.eclipse.core.resources.prefs
+PedometerAssignment/targetConfigs/readme.txt
+PedometerAssignment/targetConfigs/Tiva TM4C123GH6PM.ccxml
+RemoteSystemsTempFiles/.project
