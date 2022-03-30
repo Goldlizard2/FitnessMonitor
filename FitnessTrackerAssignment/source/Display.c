@@ -3,6 +3,7 @@
 // Project: ENCE361 project
 // Description: Displays data for milestone 1.
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include "OrbitOled/OrbitOLEDInterface.h"
 #include "headers/Display.h"
@@ -11,28 +12,33 @@
 #define LSB_PER_G 256
 #define GEE 9.81
 
-// current view number
+// current view number and state
 uint8_t viewNumber;
+bool showOrientation;
 
 // pointers to accelerometer data
 int32_t* XDataPtr;
 int32_t* YDataPtr;
 int32_t* ZDataPtr;
+int32_t* PitchDataPtr;
+int32_t* RollDataPtr;
+int32_t* PitchRefPtr;
+int32_t* RollRefPtr;
 
 // sets pointers, draws static display elements and inits OLED
-void InitDisplay(int32_t* XPtr, int32_t* YPtr, int32_t* ZPtr)
+void InitDisplay(int32_t* XPtr, int32_t* YPtr, int32_t* ZPtr, int32_t* pitchPtr, int32_t* rollPtr, int32_t* pitchRefPtr, int32_t* rollRefPtr)
 {
     viewNumber = 0;
+    showOrientation = false;
     OLEDInitialise();
 
     XDataPtr = XPtr;
     YDataPtr = YPtr;
     ZDataPtr = ZPtr;
-
-    OLEDStringDraw("Acc units: raw", 0, 0);
-    OLEDStringDraw("X:", 0, 1);
-    OLEDStringDraw("Y:", 0, 2);
-    OLEDStringDraw("Z:", 0, 3);
+    PitchDataPtr = pitchPtr;
+    RollDataPtr = rollPtr;
+    PitchRefPtr = pitchRefPtr;
+    RollRefPtr = rollRefPtr;
 }
 
 // goes to next view
@@ -60,24 +66,6 @@ int SetView(uint8_t newView)
 {
     viewNumber = newView % VIEW_COUNT;
 
-    switch (viewNumber)
-    {
-    case 0:
-        OLEDStringDraw("raw  ", 11, 0);
-        break;
-    case 1:
-        OLEDStringDraw("g    ", 11, 0);
-        break;
-    default:
-        OLEDStringDraw("m/s^2", 11, 0);
-        break;
-    }
-
-
-    OLEDStringDraw("          ", 3, 1);
-    OLEDStringDraw("          ", 3, 2);
-    OLEDStringDraw("          ", 3, 3);
-
     return viewNumber;
 }
 
@@ -85,6 +73,8 @@ int SetView(uint8_t newView)
 void displayRaw()
 {
     char str[10];
+
+    OLEDStringDraw("raw  ", 11, 0);
 
     usnprintf(str, sizeof(str), "%d", *XDataPtr);
     OLEDStringDraw(str, 3, 1);
@@ -102,16 +92,18 @@ void displayRaw()
 void displayGees()
 {
     char str[10];
-    int16_t* data[3];
+    int32_t* data[3];
     data[0] = XDataPtr;
     data[1] = YDataPtr;
     data[2] = ZDataPtr;
 
+    OLEDStringDraw("g    ", 11, 0);
+
     int8_t i;
     for (i = 0; i < 3; i++)
     {
-        uint16_t GeeUpper = abs(*data[i] / LSB_PER_G);
-        uint16_t GeeLower = abs(*data[i] * 1000 / LSB_PER_G % 1000);
+        uint32_t GeeUpper = abs(*data[i] / LSB_PER_G);
+        uint32_t GeeLower = abs(*data[i] * 1000 / LSB_PER_G % 1000);
 
         if (*data[i] >= 0)
         {
@@ -132,16 +124,18 @@ void displayGees()
 void displaySI()
 {
     char str[10];
-    int16_t* data[3];
+    int32_t* data[3];
     data[0] = XDataPtr;
     data[1] = YDataPtr;
     data[2] = ZDataPtr;
 
+    OLEDStringDraw("m/s^2", 11, 0);
+
     int8_t i;
     for (i = 0; i < 3; i++)
     {
-        uint16_t SIUpper = abs(*data[i] * GEE / LSB_PER_G);
-        uint16_t SILower = abs((uint16_t)(*data[i] * 9.81 * 1000) / LSB_PER_G % 1000);
+        uint32_t SIUpper = abs(*data[i] * GEE / LSB_PER_G);
+        uint32_t SILower = abs((uint32_t)(*data[i] * 9.81 * 1000) / LSB_PER_G % 1000);
 
         if (*data[i] >= 0)
         {
@@ -156,19 +150,63 @@ void displaySI()
     }
 }
 
+void displayPitchRoll()
+{
+    char str[10];
+    int32_t* data[4];
+    data[0] = PitchRefPtr;
+    data[1] = PitchDataPtr;
+    data[2] = RollRefPtr;
+    data[3] = RollDataPtr;
+
+    int8_t i;
+    for (i = 0; i < 4; i++)
+    {
+        uint32_t angleUpper = abs(*data[i] / 1000);
+        uint32_t angleLower = abs(*data[i] % 1000);
+
+        if (*data[i] >= 0)
+        {
+            usnprintf(str, sizeof(str), "%d.%03d", angleUpper, angleLower);
+        }
+        else
+        {
+            usnprintf(str, sizeof(str), "-%d.%03d", angleUpper, angleLower);
+        }
+
+        OLEDStringDraw(str, 7, i);
+    }
+}
+
 // dpending on the current viewnumber display the appropriate format
 void UpdateDisplay()
 {
-    switch (viewNumber)
+    if (showOrientation)
     {
-    case 0:
-        displayRaw();
-        break;
-    case 1:
-        displayGees();
-        break;
-    default:
-        displaySI();
-        break;
+        OLEDStringDraw("Ref P:         ", 0, 0);
+        OLEDStringDraw("Cur P:         ", 0, 1);
+        OLEDStringDraw("Ref R:         ", 0, 2);
+        OLEDStringDraw("Cur R:         ", 0, 3);
+        displayPitchRoll();
+    }
+    else
+    {
+        OLEDStringDraw("Acc units: ", 0, 0);
+        OLEDStringDraw("X:           ", 0, 1);
+        OLEDStringDraw("Y:           ", 0, 2);
+        OLEDStringDraw("Z:           ", 0, 3);
+
+        switch (viewNumber)
+            {
+            case 0:
+                displayRaw();
+                break;
+            case 1:
+                displayGees();
+                break;
+            default:
+                displaySI();
+                break;
+        }
     }
 }
