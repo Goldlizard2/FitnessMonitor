@@ -1,18 +1,9 @@
 #ifndef ACC_H_
 #define ACC_H_
 
-/*******************************************************
- *
- * acc.h
- *
- * Support for interfacing with the ADXL345 accelerometer
- * on the Orbit BoosterPack.
- *
- * C.P. Moore
- * Last modified:  24/02/2020
- *
-*******************************************************/
-
+#include <stdint.h>
+#include <stdbool.h>
+#include "headers/CircularBuffer.h"
 /*
  * Accl Interrupt Pins
  */
@@ -62,6 +53,30 @@
 #define ACCL_RATE_0_39HZ    0x02
 #define ACCL_RATE_0_20HZ    0x01
 #define ACCL_RATE_0_10HZ    0x00
+
+circBuf_t buffer_x;
+circBuf_t buffer_y;
+circBuf_t buffer_z;
+bool displayFlag;
+bool bufferFlag;
+
+void
+initSysTick (void);
+
+void
+SysTickIntHandler (void);
+
+void
+initClock (void);
+
+void
+initAccl (void);
+
+void
+writebuffer(void);
+
+void
+circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z);
 
 
 #endif /*ACC_H_*/

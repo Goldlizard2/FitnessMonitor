@@ -17,7 +17,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "i2c_driver.h"
+#include "headers/i2c_driver.h"
 #include "driverlib/i2c.h"
 #include "inc/hw_memmap.h"
 

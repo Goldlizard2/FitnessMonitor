@@ -4,8 +4,8 @@
 // Description: Displays data for milestone 1.
 #include <stdint.h>
 #include <stdio.h>
-#include "OrbitOLEDInterface.h"
-#include "Display.h"
+#include "OrbitOled/OrbitOLEDInterface.h"
+#include "headers/Display.h"
 
 #define VIEW_COUNT 3
 #define LSB_PER_G 256
@@ -15,12 +15,12 @@
 uint8_t viewNumber;
 
 // pointers to accelerometer data
-int16_t* XDataPtr;
-int16_t* YDataPtr;
-int16_t* ZDataPtr;
+int32_t* XDataPtr;
+int32_t* YDataPtr;
+int32_t* ZDataPtr;
 
 // sets pointers, draws static display elements and inits OLED
-void InitDisplay(int16_t* XPtr, int16_t* YPtr, int16_t* ZPtr)
+void InitDisplay(int32_t* XPtr, int32_t* YPtr, int32_t* ZPtr)
 {
     viewNumber = 0;
     OLEDInitialise();
