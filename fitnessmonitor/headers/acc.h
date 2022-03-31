@@ -1,5 +1,5 @@
-#ifndef ACC_H_
-#define ACC_H_
+#ifndef ACC_H
+#define ACC_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -62,6 +62,8 @@ int32_t mean_y;
 int32_t mean_z;
 int32_t roll;
 int32_t pitch;
+int32_t pitchRef;
+int32_t rollRef;
 bool displayFlag;
 bool bufferFlag;
 
@@ -88,4 +90,4 @@ void
 circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z);
 
 
-#endif /*ACC_H_*/
+#endif /*ACC_H*/

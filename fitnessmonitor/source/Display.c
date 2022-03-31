@@ -5,7 +5,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "OrbitOled/OrbitOLEDInterface.h"
+#include <headers/acc.h>
+#include "utils/ustdlib.h"
+#include "../OrbitOLED/lib_OrbitOled/delay.h"
+#include "../OrbitOled/OrbitOLEDInterface.h"
 #include "headers/Display.h"
 
 #define VIEW_COUNT 3
@@ -154,13 +157,13 @@ void displayPitchRoll()
 {
     char str[10];
     int32_t* data[4];
-    data[0] = PitchRefPtr;
-    data[1] = PitchDataPtr;
-    data[2] = RollRefPtr;
-    data[3] = RollDataPtr;
+    data[0] = RollRefPtr;
+    data[1] = PitchRefPtr;
+    //data[2] = RollRefPtr;
+    //data[3] = RollDataPtr;
 
     int8_t i;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 2; i++)
     {
         uint32_t angleUpper = abs(*data[i] / 1000);
         uint32_t angleLower = abs(*data[i] % 1000);
@@ -174,7 +177,7 @@ void displayPitchRoll()
             usnprintf(str, sizeof(str), "-%d.%03d", angleUpper, angleLower);
         }
 
-        OLEDStringDraw(str, 7, i);
+        OLEDStringDraw(str, 7, i+1);
     }
 }
 
@@ -183,11 +186,15 @@ void UpdateDisplay()
 {
     if (showOrientation)
     {
-        OLEDStringDraw("Ref P:         ", 0, 0);
-        OLEDStringDraw("Cur P:         ", 0, 1);
-        OLEDStringDraw("Ref R:         ", 0, 2);
-        OLEDStringDraw("Cur R:         ", 0, 3);
+        OLEDStringDraw("Ref Orintation: ", 0, 0);
+        OLEDStringDraw("Ref R:   ", 0, 1);
+        OLEDStringDraw("Ref P:   ", 0, 2);
+        OLEDStringDraw("                ", 0, 3);
+        // OLEDStringDraw("Cur R:         ", 0, 3);
         displayPitchRoll();
+        DelayMs(1100);
+        showOrientation = 0;
+
     }
     else
     {

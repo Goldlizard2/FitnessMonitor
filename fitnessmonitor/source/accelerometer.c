@@ -1,7 +1,5 @@
-<<<<<<< HEAD
-
 #include <math.h>
-=======
+
 /**********************************************************
 *
 * readAcc.c
@@ -15,7 +13,6 @@
 *
 **********************************************************/
 
->>>>>>> 46f50875e3a2eda564419d2ece47a960660c19cd
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -53,14 +50,8 @@ void initClock (void);
 void initDisplay (void);
 void displayUpdate (char *str1, char *str2, int16_t num, uint8_t charLine);
 void initAccl (void);
-<<<<<<< HEAD
 void referenceorientation(int32_t *roll, int32_t *pitch);
-=======
 
-
-
-
->>>>>>> 46f50875e3a2eda564419d2ece47a960660c19cd
 
 /***********************************************************
 * Initialisation functions: clock, SysTick, PWM
@@ -230,7 +221,7 @@ circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z)
 }
 
 void
-referenceorientation(int32_t *rollref, int32_t *pitchref)
+referenceorientation(int32_t *roll, int32_t *pitch)
 {
     mean_x = 0;
     mean_y = 0;
@@ -240,8 +231,8 @@ referenceorientation(int32_t *rollref, int32_t *pitchref)
         writebuffer();
     circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
 
-    *rollref = (atan2(mean_y,mean_z))*1000;
-    *pitchref = (atan2(-mean_x,(sqrt((mean_y*mean_y) + (mean_z*mean_z)))))*1000;
+    *roll = (atan2(mean_y,mean_z))*1000;
+    *pitch = (atan2(-mean_x,(sqrt((mean_y*mean_y) + (mean_z*mean_z)))))*1000;
 
 }
 

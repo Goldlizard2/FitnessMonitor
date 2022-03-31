@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include "utils/ustdlib.h"
 #include "../OrbitOLED/lib_OrbitOled/delay.h"
 #include "headers/Display.h"
 #include "headers/buttons4.h"
@@ -13,28 +14,30 @@
 
 
 int main(void)
-  {
+{
     initAccl();
     DelayInit();
-    InitDisplay(&mean_x, &mean_y, &mean_z, &rollPtr, &pitchPtr, &rollref, &pitchref);
+    InitDisplay(&mean_x, &mean_y, &mean_z, &pitch, &roll, &pitchRef, &rollRef);
     initButtons();
     initClock ();
     initSysTick();
-
+    showOrientation = 1;
+    referenceorientation(&rollRef, &pitchRef);
+    UpdateDisplay();
     while (1)
     {
-        // use up and down buttons to switch to the next and previous views, respectivly
+        // use up button to switch to the next state and down button to set orientation and display for 3 seconds
         if (checkButton(0) == PUSHED)
         {
             NextView();
         }
+
         else if (checkButton(1) == PUSHED)
         {
-            referenceorientation(&roll, &pitch);
+            showOrientation = 1;
+            referenceorientation(&rollRef, &pitchRef);
             UpdateDisplay();
         }
-
-        // update the display and set max loop speed
 
         if (bufferFlag)
         {

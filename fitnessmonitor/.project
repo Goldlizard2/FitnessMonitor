@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>FitnessTrackerAssignment</name>
+	<name>fitnessmonitor</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -31,7 +31,7 @@
 			<location>E:/ENCE361/projects/group14/OrbitOLED</location>
 		</link>
 		<link>
-			<name>source/ustdlib.c</name>
+			<name>ustdlib.c</name>
 			<type>1</type>
 			<location>C:/ti/TivaWare_C_Series-2.2.0.295/utils/ustdlib.c</location>
 		</link>
