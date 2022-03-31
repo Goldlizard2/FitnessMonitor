@@ -4,28 +4,25 @@
 // Description: This is a main file used for testing the "Display" module
 //              as well as providing the beginnings of milestone 1.
 #include <stdint.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include "../OrbitOLED/lib_OrbitOled/delay.h"
 #include "headers/Display.h"
 #include "headers/buttons4.h"
 #include "headers/acc.h"
 
-static int32_t mean_x;
-static int32_t mean_y;
-static int32_t mean_z;
 
 int main(void)
   {
     initAccl();
     DelayInit();
-    InitDisplay(&mean_x, &mean_y, &mean_z);
+    InitDisplay(&mean_x, &mean_y, &mean_z, &rollPtr, &pitchPtr, &rollref, &pitchref);
     initButtons();
     initClock ();
     initSysTick();
 
     while (1)
     {
-
         // use up and down buttons to switch to the next and previous views, respectivly
         if (checkButton(0) == PUSHED)
         {
@@ -33,7 +30,8 @@ int main(void)
         }
         else if (checkButton(1) == PUSHED)
         {
-            PrevView();
+            referenceorientation(&roll, &pitch);
+            UpdateDisplay();
         }
 
         // update the display and set max loop speed
