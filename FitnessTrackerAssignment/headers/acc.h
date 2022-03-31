@@ -57,8 +57,17 @@
 circBuf_t buffer_x;
 circBuf_t buffer_y;
 circBuf_t buffer_z;
+int32_t mean_x;
+int32_t mean_y;
+int32_t mean_z;
+int32_t roll;
+int32_t pitch;
 bool displayFlag;
 bool bufferFlag;
+
+
+void
+referenceorientation(int32_t *roll, int32_t *pitch);
 
 void
 initSysTick (void);
