@@ -39,7 +39,7 @@
 **********************************************************/
 // Systick configuration
 #define SYSTICK_RATE_HZ 100
-#define BUF_SIZE 10
+#define BUF_SIZE 20
 
 
 /*******************************************

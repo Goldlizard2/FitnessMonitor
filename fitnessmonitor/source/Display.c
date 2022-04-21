@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
 #include <headers/acc.h>
 #include "utils/ustdlib.h"
 #include "../OrbitOLED/lib_OrbitOled/delay.h"
@@ -165,8 +166,10 @@ void displayPitchRoll()
     int8_t i;
     for (i = 0; i < 2; i++)
     {
-        uint32_t angleUpper = abs(*data[i] / 1000);
-        uint32_t angleLower = abs(*data[i] % 1000);
+        int32_t degrees = (*data[i]*180/M_PI);
+
+        int32_t angleUpper = abs(degrees / 1000);
+        int32_t angleLower = abs(degrees % 1000);
 
         if (*data[i] >= 0)
         {
