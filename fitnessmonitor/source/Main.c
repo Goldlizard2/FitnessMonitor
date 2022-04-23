@@ -15,37 +15,48 @@
 
 int main(void)
 {
+    uint32_t stepCount = 0;
+    uint32_t goalStepCount = 1000 * 2;
+    uint32_t newGoalStepCount = 42069;
+
     initAccl();
     DelayInit();
-    InitDisplay(&mean_x, &mean_y, &mean_z, &pitch, &roll, &pitchRef, &rollRef);
+    InitDisplay(&stepCount, &goalStepCount, &newGoalStepCount);
     initButtons();
     initClock ();
     initSysTick();
-    showOrientation = 1;
     referenceorientation(&rollRef, &pitchRef);
     UpdateDisplay();
+
     while (1)
     {
-        // use up button to switch to the next state and down button to set orientation and display for 3 seconds
-        if (checkButton(0) == PUSHED)
+        switch (checkButton(0))
         {
-            NextView();
+        case PUSHED:
+            LongPressStart();
+            break;
+        case RELEASED:
+            LongPressEnd();
+            break;
+        default:
+            break;
         }
 
-        else if (checkButton(1) == PUSHED)
-        {
-            showOrientation = 1;
-            referenceorientation(&rollRef, &pitchRef);
-            UpdateDisplay();
-        }
+        if (checkButton(1) == PUSHED)
+            SwitchUnits();
+
+        if (checkButton(2) == PUSHED)
+            PrevView();
+
+        if (checkButton(3) == PUSHED)
+            NextView();
 
         if (bufferFlag)
         {
-            writebuffer();
+            stepCount++;
             bufferFlag = 0;
         }
 
-        circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
 
         if (displayFlag)
         {

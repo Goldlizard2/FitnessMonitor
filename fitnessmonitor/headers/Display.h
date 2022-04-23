@@ -7,16 +7,16 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool showOrientation;
+// current view number and state
+uint8_t viewState;
 
-void InitDisplay(int32_t* XPtr, int32_t* YPtr, int32_t* ZPtr, int32_t* pitchPtr, int32_t* rollPtr, int32_t* pitchRefPtr, int32_t* rollRefPtr);
+void InitDisplay(uint32_t* stepCountIn, uint32_t* goalStepCountIn, uint32_t* newGoalStepCountIn);
 int NextView();
 int PrevView();
 int SetView(uint8_t newView);
-void displayRaw();
-void displayGees();
-void displaySI();
-void displayPitchRoll();
+void SwitchUnits();
+void LongPressStart();
+void LongPressEnd();
 void UpdateDisplay();
 
 #endif
