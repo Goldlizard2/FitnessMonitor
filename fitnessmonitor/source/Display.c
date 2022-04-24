@@ -8,59 +8,54 @@
 #include <math.h>
 #include <headers/acc.h>
 #include "utils/ustdlib.h"
-#include "../OrbitOLED/lib_OrbitOled/delay.h"
-#include "../OrbitOled/OrbitOLEDInterface.h"
+#include "lib_OrbitOled/delay.h"
+#include "OrbitOLEDInterface.h"
 #include "headers/Display.h"
 
 #define VIEW_COUNT 3
-#define LSB_PER_G 256
-#define GEE 9.81
+#define DISPLAY_WIDTH 16
+#define CM_PER_STEP 90
+#define MILE_PER_DM 62
 
-// current view number and state
-uint8_t viewNumber;
-bool showOrientation;
+bool unitMode;
+bool longPress;
 
 // pointers to accelerometer data
-int32_t* XDataPtr;
-int32_t* YDataPtr;
-int32_t* ZDataPtr;
-int32_t* PitchDataPtr;
-int32_t* RollDataPtr;
-int32_t* PitchRefPtr;
-int32_t* RollRefPtr;
+uint32_t* stepCount;
+uint32_t* goalStepCount;
+uint32_t* newGoalStepCount;
+
 
 // sets pointers, draws static display elements and inits OLED
-void InitDisplay(int32_t* XPtr, int32_t* YPtr, int32_t* ZPtr, int32_t* pitchPtr, int32_t* rollPtr, int32_t* pitchRefPtr, int32_t* rollRefPtr)
+void InitDisplay(uint32_t* stepCountIn, uint32_t* goalStepCountIn, uint32_t* newGoalStepCountIn)
 {
-    viewNumber = 0;
-    showOrientation = false;
+    viewState = 0;
+    unitMode = false;
+    longPress = false;
+
     OLEDInitialise();
 
-    XDataPtr = XPtr;
-    YDataPtr = YPtr;
-    ZDataPtr = ZPtr;
-    PitchDataPtr = pitchPtr;
-    RollDataPtr = rollPtr;
-    PitchRefPtr = pitchRefPtr;
-    RollRefPtr = rollRefPtr;
+    stepCount = stepCountIn;
+    goalStepCount = goalStepCountIn;
+    newGoalStepCount = newGoalStepCountIn;
 }
 
 // goes to next view
 int NextView()
 {
-    return SetView(viewNumber + 1);
+    return SetView(viewState + 1);
 }
 
 // goes to previous view
 int PrevView()
 {
-    if (viewNumber == 0)
+    if (viewState == 0)
     {
         return SetView(VIEW_COUNT - 1);
     }
     else
     {
-        return SetView(viewNumber - 1);
+        return SetView(viewState - 1);
     }
 }
 
@@ -68,155 +63,129 @@ int PrevView()
 // display to avoid chars from previous view showing on the current one
 int SetView(uint8_t newView)
 {
-    viewNumber = newView % VIEW_COUNT;
+    viewState = newView % VIEW_COUNT;
 
-    return viewNumber;
+    OLEDStringDraw("                                                                ", 0, 0);
+
+    return viewState;
+}
+
+void LongPressStart()
+{
+    OLEDStringDraw("----------------||||||||||||||||||||||||||||||||----------------", 0, 0);
+    longPress = true;
+}
+
+void LongPressEnd()
+{
+    OLEDStringDraw("                                                                ", 0, 0);
+    longPress = false;
 }
 
 // displays the data in raw units from the accelerometer
-void displayRaw()
+void displaySteps()
 {
-    char str[10];
+    char str[DISPLAY_WIDTH];
 
-    OLEDStringDraw("raw  ", 11, 0);
+    OLEDStringDraw("Unit: Steps", 0, 0);
 
-    usnprintf(str, sizeof(str), "%d", *XDataPtr);
-    OLEDStringDraw(str, 3, 1);
-
-    usnprintf(str, sizeof(str), "%d", *YDataPtr);
-    OLEDStringDraw(str, 3, 2);
-
-    usnprintf(str, sizeof(str), "%d", *ZDataPtr);
-    OLEDStringDraw(str, 3, 3);
+    usnprintf(str, sizeof(str), "Total: %d", *stepCount);
+    OLEDStringDraw(str, 0, 1);
+    usnprintf(str, sizeof(str), "Goal : %d ", *goalStepCount);
+    OLEDStringDraw(str, 0, 2);
 }
 
-// displays the data in gees, due to "usnprintf" not taking floats
-// the data is stored in an upper part that is the units place and upwards
-// and a lower part that is the thousandths place to the tens place
-void displayGees()
+void displayPercent()
 {
-    char str[10];
-    int32_t* data[3];
-    data[0] = XDataPtr;
-    data[1] = YDataPtr;
-    data[2] = ZDataPtr;
+    char str[DISPLAY_WIDTH];
+    uint32_t persentSteps2DP = *stepCount * (10000 / *goalStepCount);
 
-    OLEDStringDraw("g    ", 11, 0);
+    OLEDStringDraw("Unit: Percent", 0, 0);
 
-    int8_t i;
-    for (i = 0; i < 3; i++)
-    {
-        uint32_t GeeUpper = abs(*data[i] / LSB_PER_G);
-        uint32_t GeeLower = abs(*data[i] * 1000 / LSB_PER_G % 1000);
-
-        if (*data[i] >= 0)
-        {
-            usnprintf(str, sizeof(str), "%d.%03d", GeeUpper, GeeLower);
-        }
-        else
-        {
-            usnprintf(str, sizeof(str), "-%d.%03d", GeeUpper, GeeLower);
-        }
-
-        OLEDStringDraw(str, 3, i + 1);
-    }
+    usnprintf(str, sizeof(str), "Total: %d.%02d", persentSteps2DP / 100, persentSteps2DP % 100);
+    OLEDStringDraw(str, 0, 1);
 }
 
-// displays the data in m/s^2, due to "usnprintf" not taking floats
-// the data is stored in an upper part that is the units place and upwards
-// and a lower part that is the thousandths place to the tens place
-void displaySI()
+void displayKMs()
 {
-    char str[10];
-    int32_t* data[3];
-    data[0] = XDataPtr;
-    data[1] = YDataPtr;
-    data[2] = ZDataPtr;
+    char str[DISPLAY_WIDTH];
+    uint32_t metersSteps = *stepCount * CM_PER_STEP / 100;
+    uint32_t metersGoal = *goalStepCount * CM_PER_STEP / 100;
 
-    OLEDStringDraw("m/s^2", 11, 0);
+    OLEDStringDraw("Unit: kilometres", 0, 0);
 
-    int8_t i;
-    for (i = 0; i < 3; i++)
-    {
-        uint32_t SIUpper = abs(*data[i] * GEE / LSB_PER_G);
-        uint32_t SILower = abs((uint32_t)(*data[i] * 9.81 * 1000) / LSB_PER_G % 1000);
-
-        if (*data[i] >= 0)
-        {
-            usnprintf(str, sizeof(str), "%d.%03d", SIUpper, SILower);
-        }
-        else
-        {
-            usnprintf(str, sizeof(str), "-%d.%03d", SIUpper, SILower);
-        }
-
-        OLEDStringDraw(str, 3, i + 1);
-    }
+    usnprintf(str, sizeof(str), "Total: %d.%03d", metersSteps / 1000, metersSteps % 1000);
+    OLEDStringDraw(str, 0, 1);
+    usnprintf(str, sizeof(str), "Goal : %d.%03d", metersGoal / 1000, metersGoal % 1000);
+    OLEDStringDraw(str, 0, 2);
 }
 
-void displayPitchRoll()
+void displayMiles()
 {
-    char str[10];
-    int32_t* data[4];
-    data[0] = RollRefPtr;
-    data[1] = PitchRefPtr;
-    //data[2] = RollRefPtr;
-    //data[3] = RollDataPtr;
+    char str[DISPLAY_WIDTH];
+    uint32_t milimilesSteps = *stepCount * CM_PER_STEP * MILE_PER_DM / 10000;
+    uint32_t milimilesGoal = *goalStepCount * CM_PER_STEP * MILE_PER_DM / 10000;
 
-    int8_t i;
-    for (i = 0; i < 2; i++)
-    {
-        int32_t degrees = (*data[i]*180/M_PI);
+    OLEDStringDraw("Unit: miles", 0, 0);
 
-        int32_t angleUpper = abs(degrees / 1000);
-        int32_t angleLower = abs(degrees % 1000);
+    usnprintf(str, sizeof(str), "Total: %d.%03d", milimilesSteps / 1000, milimilesSteps % 1000);
+    OLEDStringDraw(str, 0, 1);
+    usnprintf(str, sizeof(str), "Goal : %d.%03d", milimilesGoal / 1000, milimilesGoal % 1000);
+    OLEDStringDraw(str, 0, 2);
+}
 
-        if (*data[i] >= 0)
-        {
-            usnprintf(str, sizeof(str), "%d.%03d", angleUpper, angleLower);
-        }
-        else
-        {
-            usnprintf(str, sizeof(str), "-%d.%03d", angleUpper, angleLower);
-        }
+void displaySetGoal()
+{
+    char str[DISPLAY_WIDTH];
 
-        OLEDStringDraw(str, 7, i+1);
-    }
+    OLEDStringDraw("Set new goal", 0, 0);
+
+    usnprintf(str, sizeof(str), "Current: %d", *goalStepCount);
+    OLEDStringDraw(str, 0, 1);
+    usnprintf(str, sizeof(str), "New    : %d ", *newGoalStepCount);
+    OLEDStringDraw(str, 0, 2);
+}
+
+void SwitchUnits()
+{
+    unitMode = !unitMode;
+    OLEDStringDraw("                                                                ", 0, 0);
 }
 
 // dpending on the current viewnumber display the appropriate format
 void UpdateDisplay()
 {
-    if (showOrientation)
-    {
-        OLEDStringDraw("Ref Orintation: ", 0, 0);
-        OLEDStringDraw("Ref R:   ", 0, 1);
-        OLEDStringDraw("Ref P:   ", 0, 2);
-        OLEDStringDraw("                ", 0, 3);
-        // OLEDStringDraw("Cur R:         ", 0, 3);
-        displayPitchRoll();
-        DelayMs(1100);
-        showOrientation = 0;
+    if (longPress)
+        return;
 
+    if (unitMode)
+    {
+        switch (viewState)
+        {
+        case 0:
+            displayPercent();
+            break;
+        case 1:
+            displayMiles();
+            break;
+        default:
+            displaySetGoal();
+            break;
+        }
     }
     else
     {
-        OLEDStringDraw("Acc units: ", 0, 0);
-        OLEDStringDraw("X:           ", 0, 1);
-        OLEDStringDraw("Y:           ", 0, 2);
-        OLEDStringDraw("Z:           ", 0, 3);
-
-        switch (viewNumber)
-            {
-            case 0:
-                displayRaw();
-                break;
-            case 1:
-                displayGees();
-                break;
-            default:
-                displaySI();
-                break;
+        switch (viewState)
+        {
+        case 0:
+            displaySteps();
+            break;
+        case 1:
+            displayKMs();
+            break;
+        default:
+            displaySetGoal();
+            break;
         }
     }
 }
