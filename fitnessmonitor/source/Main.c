@@ -3,7 +3,8 @@
 // Project: ENCE361 project
 // Description: This is a main file used for testing the "Display" module
 //              as well as providing the beginnings of milestone 1.
-
+#include <stdint.h>
+#include <stdbool.h>
 #include <driverlib/adc.h>
 #include <driverlib/interrupt.h>
 #include <driverlib/sysctl.h>
@@ -17,6 +18,9 @@
 #include <sys/_stdint.h>
 
 #define SYSTICK_RATE_HZ 100
+uint8_t longPressFlag = 0;
+uint8_t shortPressFlag = 0;
+
 
 void
 initClock (void)
@@ -31,11 +35,11 @@ SysTickIntHandler (void)
 {
 
     ADCProcessorTrigger(ADC0_BASE, 3);
-
+    static int32_t pressCount = 0;
     static uint16_t tickCount = 0;
     tickCount ++;
     updateButtons();
-    // updateSwitches();
+    updateSwitches();
     if (tickCount == 50)
     {
 
@@ -47,6 +51,28 @@ SysTickIntHandler (void)
     {
         bufferFlag = 1;
     }
+    if (checkButton(DOWN) == PUSHED || pressCount != 0) {
+        pressCount++;
+
+    }
+    if (checkButton(DOWN) == RELEASED) {
+        pressCount = 0;
+    }
+
+    if (pressCount >= 50){
+        longPressFlag = 1;
+        pressCount = 0;
+    }
+    if (pressCount < 50){
+            shortPressFlag = 1;
+            pressCount = 0;
+        }
+
+
+
+
+
+
 
 }
 
@@ -83,29 +109,35 @@ int main(void)
 
     while (1)
     {
-        /*switch (checkButton(DOWN))
-        {
-
-        case PUSHED:
-            LongPressStart();
-            break;
-        case RELEASED:
-            LongPressEnd();
-            break;
-        default:
-            break;
-        }*/
         if (checkSwitch(RIGHTSW) == SWUP){
             if (checkButton(UP) == PUSHED)
+            {
                 stepCount += 100;
-            if (checkButton(DOWN) == PUSHED)
-                stepCount -= 500;
+                SetView(viewState);
+            }
+            if (shortPressFlag)
+            {
+                if (stepCount < 500){
+                    stepCount = 0;
+
+                } else {
+                    stepCount -= 500;
+                }
+
+                SetView(viewState);
+                shortPressFlag = 0;
+            }
         } else {
-            if (viewState == 2 && checkButton(DOWN) == PUSHED){
+            if (viewState == 2 && shortPressFlag){
                         goalStepCount = adccircbuffermeancalculator();
-                        viewState = 0;
+                        viewState = SetView(0);
                         UpdateDisplay();
+                        shortPressFlag = 0;
                     }
+            if (viewState != 2 && longPressFlag){
+                LongPressStart();
+                longPressFlag = 0;
+            }
             if (checkButton(UP) == PUSHED)
                         SwitchUnits();
         }
@@ -118,7 +150,6 @@ int main(void)
 
         if (bufferFlag)
         {
-            stepCount++;
             bufferFlag = 0;
         }
 

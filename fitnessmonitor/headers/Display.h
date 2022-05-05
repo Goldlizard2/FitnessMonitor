@@ -13,6 +13,7 @@ int32_t stepCount;
 int32_t goalStepCount;
 int32_t newGoalStepCount;
 
+
 void InitDisplay();
 int NextView();
 int PrevView();

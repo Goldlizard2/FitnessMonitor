@@ -82,13 +82,13 @@ initButtons (void)
     SysCtlPeripheralEnable (LEFT_SW_PERIPH);
     GPIOPinTypeGPIOInput (LEFT_SW_PORT_BASE, LEFT_SW_PIN);
     GPIOPadConfigSet (LEFT_SW_PORT_BASE, LEFT_SW_PIN, GPIO_STRENGTH_2MA,
-       GPIO_PIN_TYPE_STD_WPU);
+       GPIO_PIN_TYPE_STD_WPD);
     sw_normal[LEFTSW] = LEFT_SW_NORMAL;
     // RIGHT sw (active LOW)
     SysCtlPeripheralEnable (RIGHT_SW_PERIPH);
     GPIOPinTypeGPIOInput (RIGHT_SW_PORT_BASE, RIGHT_SW_PIN);
     GPIOPadConfigSet (RIGHT_SW_PORT_BASE, RIGHT_SW_PIN, GPIO_STRENGTH_2MA,
-       GPIO_PIN_TYPE_STD_WPU);
+       GPIO_PIN_TYPE_STD_WPD);
     sw_normal[RIGHTSW] = RIGHT_SW_NORMAL;
 
 	for (i = 0; i < NUM_BUTS; i++)
@@ -194,14 +194,15 @@ checkButton (uint8_t butName)
 uint8_t
 checkSwitch (uint8_t swName)
 {
+    /*uint8_t current_state
     if (sw_flag[swName])
     {
-        sw_flag[swName] = false;
+        sw_flag[swName] = false;*/
         if (sw_state[swName] == sw_normal[swName])
             return SWDOWN;
         else
             return SWUP;
-    }
-    return NOSW_CHANGE;
+    //}
+    //return NOSW_CHANGE;
 }
 
