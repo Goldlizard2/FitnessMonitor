@@ -53,20 +53,20 @@ SysTickIntHandler (void)
     }
     if (checkButton(DOWN) == PUSHED || pressCount != 0) {
         pressCount++;
-
+        if (pressCount >= 50){
+            longPressFlag = 1;
+            pressCount = 0;
+        }
+        if (pressCount < 50){
+                shortPressFlag = 1;
+                pressCount = 0;
+            }
     }
     if (checkButton(DOWN) == RELEASED) {
         pressCount = 0;
     }
 
-    if (pressCount >= 50){
-        longPressFlag = 1;
-        pressCount = 0;
-    }
-    if (pressCount < 50){
-            shortPressFlag = 1;
-            pressCount = 0;
-        }
+
 
 
 
