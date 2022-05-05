@@ -2,14 +2,17 @@
 // Last modified: 26/3/2022
 // Project: ENCE361 project
 // Description: Displays data for milestone 1.
+#include <headers/ADC.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
-#include <headers/acc.h>
+#include "headers/acc.h"
+#include "driverlib/adc.h"
 #include "utils/ustdlib.h"
-#include "lib_OrbitOled/delay.h"
-#include "OrbitOLEDInterface.h"
+#include "headers/buttons4.h"
+#include "../OrbitOLED/lib_OrbitOled/delay.h"
+#include "../OrbitOLED/OrbitOLEDInterface.h"
 #include "headers/Display.h"
 
 #define VIEW_COUNT 3
@@ -20,24 +23,14 @@
 bool unitMode;
 bool longPress;
 
-// pointers to accelerometer data
-uint32_t* stepCount;
-uint32_t* goalStepCount;
-uint32_t* newGoalStepCount;
-
-
 // sets pointers, draws static display elements and inits OLED
-void InitDisplay(uint32_t* stepCountIn, uint32_t* goalStepCountIn, uint32_t* newGoalStepCountIn)
+void InitDisplay()
 {
     viewState = 0;
     unitMode = false;
     longPress = false;
-
+    goalStepCount = 1000;
     OLEDInitialise();
-
-    stepCount = stepCountIn;
-    goalStepCount = goalStepCountIn;
-    newGoalStepCount = newGoalStepCountIn;
 }
 
 // goes to next view
@@ -82,23 +75,22 @@ void LongPressEnd()
     longPress = false;
 }
 
-// displays the data in raw units from the accelerometer
+
 void displaySteps()
 {
     char str[DISPLAY_WIDTH];
 
     OLEDStringDraw("Unit: Steps", 0, 0);
-
-    usnprintf(str, sizeof(str), "Total: %d", *stepCount);
+    usnprintf(str, sizeof(str), "Total: %d", stepCount);
     OLEDStringDraw(str, 0, 1);
-    usnprintf(str, sizeof(str), "Goal : %d ", *goalStepCount);
+    usnprintf(str, sizeof(str), "Goal : %d ", goalStepCount);
     OLEDStringDraw(str, 0, 2);
 }
 
 void displayPercent()
 {
     char str[DISPLAY_WIDTH];
-    uint32_t persentSteps2DP = *stepCount * (10000 / *goalStepCount);
+    uint32_t persentSteps2DP = stepCount * (10000 / goalStepCount);
 
     OLEDStringDraw("Unit: Percent", 0, 0);
 
@@ -109,8 +101,8 @@ void displayPercent()
 void displayKMs()
 {
     char str[DISPLAY_WIDTH];
-    uint32_t metersSteps = *stepCount * CM_PER_STEP / 100;
-    uint32_t metersGoal = *goalStepCount * CM_PER_STEP / 100;
+    uint32_t metersSteps = stepCount * CM_PER_STEP / 100;
+    uint32_t metersGoal = goalStepCount * CM_PER_STEP / 100;
 
     OLEDStringDraw("Unit: kilometres", 0, 0);
 
@@ -123,8 +115,8 @@ void displayKMs()
 void displayMiles()
 {
     char str[DISPLAY_WIDTH];
-    uint32_t milimilesSteps = *stepCount * CM_PER_STEP * MILE_PER_DM / 10000;
-    uint32_t milimilesGoal = *goalStepCount * CM_PER_STEP * MILE_PER_DM / 10000;
+    uint32_t milimilesSteps = stepCount * CM_PER_STEP * MILE_PER_DM / 10000;
+    uint32_t milimilesGoal = goalStepCount * CM_PER_STEP * MILE_PER_DM / 10000;
 
     OLEDStringDraw("Unit: miles", 0, 0);
 
@@ -140,9 +132,9 @@ void displaySetGoal()
 
     OLEDStringDraw("Set new goal", 0, 0);
 
-    usnprintf(str, sizeof(str), "Current: %d", *goalStepCount);
+    usnprintf(str, sizeof(str), "Current: %d", goalStepCount);
     OLEDStringDraw(str, 0, 1);
-    usnprintf(str, sizeof(str), "New    : %d ", *newGoalStepCount);
+    usnprintf(str, sizeof(str), "New    : %d ", adccircbuffermeancalculator());
     OLEDStringDraw(str, 0, 2);
 }
 
@@ -155,8 +147,11 @@ void SwitchUnits()
 // dpending on the current viewnumber display the appropriate format
 void UpdateDisplay()
 {
-    if (longPress)
+    if (longPress){
+        stepCount = 0;
         return;
+    }
+
 
     if (unitMode)
     {
@@ -171,6 +166,7 @@ void UpdateDisplay()
         default:
             displaySetGoal();
             break;
+
         }
     }
     else
@@ -186,6 +182,7 @@ void UpdateDisplay()
         default:
             displaySetGoal();
             break;
+
         }
     }
 }
