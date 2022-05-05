@@ -1,18 +1,4 @@
 #include <math.h>
-
-/**********************************************************
-*
-* readAcc.c
-*
-* Example code which reads acceleration in
-* three dimensions and displays the reulting data on
-* the Orbit OLED display.
-*
-*    C. P. Moore
-*    11 Feb 2020
-*
-**********************************************************/
-
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -33,83 +19,12 @@
 #include "headers/i2c_driver.h"
 
 
-
-/**********************************************************
-* Constants
-**********************************************************/
-// Systick configuration
-#define SYSTICK_RATE_HZ 100
-#define BUF_SIZE 20
-
-
-/*******************************************
-*      Local prototypes
-*******************************************/
-void SysTickIntHandler (void);
-void initClock (void);
-void initDisplay (void);
 void displayUpdate (char *str1, char *str2, int16_t num, uint8_t charLine);
 void initAccl (void);
 void referenceorientation(int32_t *roll, int32_t *pitch);
 
+#define BUF_SIZE 20
 
-/***********************************************************
-* Initialisation functions: clock, SysTick, PWM
-***********************************************************
-* Clock
-***********************************************************/
-void
-initSysTick (void)
-{
-    //
-    // Set up the period for the SysTick timer.  The SysTick timer period is
-    // set as a function of the system clock.
-    SysTickPeriodSet (SysCtlClockGet () / SYSTICK_RATE_HZ);
-    //
-    // Register the interrupt handler
-    SysTickIntRegister (SysTickIntHandler);
-    //
-    // Enable interrupt and device
-    SysTickIntEnable ();
-    SysTickEnable ();
-}
-
-void
-SysTickIntHandler (void)
-{
-    static uint16_t tickCount = 0;
-    tickCount ++;
-    updateButtons();
-    if (tickCount == 50)
-    {
-
-        tickCount = 0;
-        displayFlag = 1;
-
-    }
-    if (tickCount%10 == 0)
-    {
-        bufferFlag = 1;
-    }
-
-}
-
-
-void
-initClock (void)
-{
-    // Set the clock rate to 20 MHz
-    SysCtlClockSet (SYSCTL_SYSDIV_10 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
-                   SYSCTL_XTAL_16MHZ);
-}
-
-/*********************************************************
-* initDisplay
-*********************************************************/
-
-/*********************************************************
-* initAccl
-*********************************************************/
 void
 initAccl (void)
 {

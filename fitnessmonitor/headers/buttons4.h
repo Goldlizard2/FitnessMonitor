@@ -22,6 +22,8 @@
 //*****************************************************************************
 enum butNames {UP = 0, DOWN, LEFT, RIGHT, NUM_BUTS};
 enum butStates {RELEASED = 0, PUSHED, NO_CHANGE};
+enum swStates {SWDOWN = 0, SWUP, NOSW_CHANGE};
+enum swNames {LEFTSW = 0, RIGHTSW, NUM_SW};
 // UP button
 #define UP_BUT_PERIPH  SYSCTL_PERIPH_GPIOE
 #define UP_BUT_PORT_BASE  GPIO_PORTE_BASE
@@ -42,8 +44,20 @@ enum butStates {RELEASED = 0, PUSHED, NO_CHANGE};
 #define RIGHT_BUT_PORT_BASE  GPIO_PORTF_BASE
 #define RIGHT_BUT_PIN  GPIO_PIN_0
 #define RIGHT_BUT_NORMAL  true
+// LEFT switch
+#define LEFT_SW_PERIPH  SYSCTL_PERIPH_GPIOA
+#define LEFT_SW_PORT_BASE  GPIO_PORTA_BASE
+#define LEFT_SW_PIN  GPIO_PIN_6
+#define LEFT_SW_NORMAL  false
+//RIGHT switch
+#define RIGHT_SW_PERIPH   SYSCTL_PERIPH_GPIOA
+#define RIGHT_SW_PORT_BASE  GPIO_PORTA_BASE
+#define RIGHT_SW_PIN  GPIO_PIN_7
+#define RIGHT_SW_NORMAL  false
+
 
 #define NUM_BUT_POLLS 3
+#define NUM_SW_POLLS 3
 // Debounce algorithm: A state machine is associated with each button.
 // A state change occurs only after NUM_BUT_POLLS consecutive polls have
 // read the pin in the opposite condition, before the state changes and
@@ -63,6 +77,9 @@ initButtons (void);
 void
 updateButtons (void);
 
+void
+updateSwitches (void);
+
 // *******************************************************
 // checkButton: Function returns the new button state if the button state
 // (PUSHED or RELEASED) has changed since the last call, otherwise returns
@@ -70,5 +87,8 @@ updateButtons (void);
 // enumeration butStates, excluding 'NUM_BUTS'. Safe under interrupt.
 uint8_t
 checkButton (uint8_t butName);
+
+uint8_t
+checkSwitch (uint8_t swName);
 
 #endif /*BUTTONS_H_*/

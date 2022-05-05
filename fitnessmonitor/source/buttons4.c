@@ -33,6 +33,10 @@ static bool but_state[NUM_BUTS];	// Corresponds to the electrical state
 static uint8_t but_count[NUM_BUTS];
 static bool but_flag[NUM_BUTS];
 static bool but_normal[NUM_BUTS];   // Corresponds to the electrical state
+static bool sw_state[NUM_SW];    // Corresponds to the electrical state
+static uint8_t sw_count[NUM_SW];
+static bool sw_flag[NUM_SW];
+static bool sw_normal[NUM_SW];   // Corresponds to the electrical state
 
 // *******************************************************
 // initButtons: Initialise the variables associated with the set of buttons
@@ -41,6 +45,7 @@ void
 initButtons (void)
 {
 	int i;
+	int j;
 
 	// UP button (active HIGH)
     SysCtlPeripheralEnable (UP_BUT_PERIPH);
@@ -73,6 +78,18 @@ initButtons (void)
     GPIOPadConfigSet (RIGHT_BUT_PORT_BASE, RIGHT_BUT_PIN, GPIO_STRENGTH_2MA,
        GPIO_PIN_TYPE_STD_WPU);
     but_normal[RIGHT] = RIGHT_BUT_NORMAL;
+    // LEFT sw (active LOW)
+    SysCtlPeripheralEnable (LEFT_SW_PERIPH);
+    GPIOPinTypeGPIOInput (LEFT_SW_PORT_BASE, LEFT_SW_PIN);
+    GPIOPadConfigSet (LEFT_SW_PORT_BASE, LEFT_SW_PIN, GPIO_STRENGTH_2MA,
+       GPIO_PIN_TYPE_STD_WPU);
+    sw_normal[LEFTSW] = LEFT_SW_NORMAL;
+    // RIGHT sw (active LOW)
+    SysCtlPeripheralEnable (RIGHT_SW_PERIPH);
+    GPIOPinTypeGPIOInput (RIGHT_SW_PORT_BASE, RIGHT_SW_PIN);
+    GPIOPadConfigSet (RIGHT_SW_PORT_BASE, RIGHT_SW_PIN, GPIO_STRENGTH_2MA,
+       GPIO_PIN_TYPE_STD_WPU);
+    sw_normal[RIGHTSW] = RIGHT_SW_NORMAL;
 
 	for (i = 0; i < NUM_BUTS; i++)
 	{
@@ -80,6 +97,13 @@ initButtons (void)
 		but_count[i] = 0;
 		but_flag[i] = false;
 	}
+
+	for (j = 0; j < NUM_SW; j++)
+    {
+        sw_state[i] = sw_normal[i];
+        sw_count[i] = 0;
+        sw_flag[i] = false;
+    }
 }
 
 // *******************************************************
@@ -120,6 +144,35 @@ updateButtons (void)
 	}
 }
 
+void
+updateSwitches (void)
+{
+    bool sw_value[NUM_SW];
+    int i;
+
+    // Read the pins; true means HIGH, false means LOW
+    sw_value[LEFTSW] = (GPIOPinRead (LEFT_SW_PORT_BASE, LEFT_SW_PIN) == LEFT_SW_PIN);
+    sw_value[RIGHTSW] = (GPIOPinRead (RIGHT_SW_PORT_BASE, RIGHT_SW_PIN) == RIGHT_SW_PIN);
+    // Iterate through the switches, updating button variables as required
+    for (i = 0; i < NUM_SW; i++)
+    {
+        if (sw_value[i] != sw_state[i])
+        {
+            sw_count[i]++;
+            if (sw_count[i] >= NUM_SW_POLLS)
+            {
+                sw_state[i] = sw_value[i];
+                sw_flag[i] = true;
+                sw_count[i] = 0;
+            }
+        }
+        else{
+            sw_count[i] = 0;
+        }
+    }
+}
+
+
 // *******************************************************
 // checkButton: Function returns the new button logical state if the button
 // logical state (PUSHED or RELEASED) has changed since the last call,
@@ -136,5 +189,19 @@ checkButton (uint8_t butName)
 			return PUSHED;
 	}
 	return NO_CHANGE;
+}
+
+uint8_t
+checkSwitch (uint8_t swName)
+{
+    if (sw_flag[swName])
+    {
+        sw_flag[swName] = false;
+        if (sw_state[swName] == sw_normal[swName])
+            return SWDOWN;
+        else
+            return SWUP;
+    }
+    return NOSW_CHANGE;
 }
 

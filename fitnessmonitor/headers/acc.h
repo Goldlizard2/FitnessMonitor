@@ -72,15 +72,6 @@ void
 referenceorientation(int32_t *roll, int32_t *pitch);
 
 void
-initSysTick (void);
-
-void
-SysTickIntHandler (void);
-
-void
-initClock (void);
-
-void
 initAccl (void);
 
 void
