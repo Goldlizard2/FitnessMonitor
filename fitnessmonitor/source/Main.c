@@ -51,18 +51,23 @@ SysTickIntHandler (void)
     {
         bufferFlag = 1;
     }
-    if (checkButton(DOWN) == PUSHED || pressCount != 0) {
+    uint8_t button;
+    button = checkButton(DOWN);
+    if (button == PUSHED || pressCount != 0) {
         pressCount++;
     }
-    if (checkButton(DOWN) == RELEASED && pressCount < 100) {
+    if (button == RELEASED && pressCount < 100) {
         shortPressFlag = 1;
         pressCount = 0;
     }
-    if (checkButton(DOWN) == RELEASED && pressCount >= 100){
+    if (pressCount >= 100){
         longPressFlag = 1;
-        pressCount = 0;
     }
+    if (button == RELEASED && pressCount >= 100){
+            longPressFlag = 0;
+            pressCount = 0;
 
+        }
 }
 
 void
@@ -125,8 +130,8 @@ int main(void)
                     }
             if (viewState != 2 && longPressFlag){
                 LongPressStart();
-                longPressFlag = 0;
                 LongPressEnd();
+                stepCount = 0;
             }
             if (checkButton(UP) == PUSHED)
                         SwitchUnits();

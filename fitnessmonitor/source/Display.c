@@ -147,10 +147,6 @@ void SwitchUnits()
 // dpending on the current viewnumber display the appropriate format
 void UpdateDisplay()
 {
-    if (longPress){
-        stepCount = 0;
-        return;
-    }
 
 
     if (unitMode)
