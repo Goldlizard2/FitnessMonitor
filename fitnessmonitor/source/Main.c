@@ -15,10 +15,12 @@
 #include <headers/buttons4.h>
 #include <headers/Display.h>
 #include <inc/hw_memmap.h>
-#include <lib_OrbitOled/delay.h>
+#include <../OrbitOLED/lib_OrbitOled/delay.h>
 #include <sys/_stdint.h>
 
 #define SYSTICK_RATE_HZ 100
+#define UPPERTHRESHOLD 60
+#define LOWERTHRESHOLD 35
 uint8_t longPressFlag = 0;
 uint8_t shortPressFlag = 0;
 uint8_t stepFlag = 0;
@@ -102,8 +104,8 @@ int main(void)
     initSysTick();
     referenceorientation(&rollRef, &pitchRef);
     UpdateDisplay();
-    uint8_t threshHold = 60;
     uint8_t aboveThreshHold = 0;
+
 
     IntMasterEnable();
 
@@ -155,13 +157,13 @@ int main(void)
                 circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
 
                 magnitude = addStep();
-                if (magnitude > threshHold && aboveThreshHold == 0)
+                if (magnitude > UPPERTHRESHOLD && aboveThreshHold == 0)
                 {
                     stepCount += 1;
                     aboveThreshHold = 1;
                 }
 
-                if (magnitude < threshHold)
+                if (magnitude < LOWERTHRESHOLD)
                     aboveThreshHold = 0;
 
                 stepFlag = 0;
@@ -184,7 +186,6 @@ int main(void)
 
         if (displayFlag)
         {
-            printf("%d\n", stepCount);
             UpdateDisplay();
             displayFlag = 0;
         }
