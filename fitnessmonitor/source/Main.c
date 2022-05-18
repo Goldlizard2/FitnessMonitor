@@ -3,6 +3,7 @@
 // Project: ENCE361 project
 // Description: This is a main file used for testing the "Display" module
 //              as well as providing the beginnings of milestone 1.
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <driverlib/adc.h>
@@ -14,30 +15,30 @@
 #include <headers/buttons4.h>
 #include <headers/Display.h>
 #include <inc/hw_memmap.h>
-#include <lib_OrbitOled/delay.h>
+#include <../OrbitOLED/lib_OrbitOled/delay.h>
 #include <sys/_stdint.h>
 
 #define SYSTICK_RATE_HZ 100
 uint8_t longPressFlag = 0;
 uint8_t shortPressFlag = 0;
+uint8_t stepFlag = 0;
 
-
-void
-initClock (void)
+void initClock(void)
 {
     // Set the clock rate to 20 MHz
-    SysCtlClockSet (SYSCTL_SYSDIV_10 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
-                   SYSCTL_XTAL_16MHZ);
+    SysCtlClockSet(SYSCTL_SYSDIV_10 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
+    SYSCTL_XTAL_16MHZ);
 }
 
-void
-SysTickIntHandler (void)
+void SysTickIntHandler(void)
 {
 
     ADCProcessorTrigger(ADC0_BASE, 3);
     static int32_t pressCount = 0;
     static uint16_t tickCount = 0;
-    tickCount ++;
+    uint8_t button;
+    stepFlag = 1;
+    tickCount++;
     updateButtons();
     updateSwitches();
     if (tickCount == 50)
@@ -47,49 +48,51 @@ SysTickIntHandler (void)
         displayFlag = 1;
 
     }
-    if (tickCount%10 == 0)
+    if (tickCount % 10 == 0)
     {
         bufferFlag = 1;
     }
-    uint8_t button;
+
     button = checkButton(DOWN);
-    if (button == PUSHED || pressCount != 0) {
+    if (button == PUSHED || pressCount != 0)
+    {
         pressCount++;
     }
-    if (button == RELEASED && pressCount < 100) {
+    if (button == RELEASED && pressCount < 100)
+    {
         shortPressFlag = 1;
         pressCount = 0;
     }
-    if (pressCount >= 100){
+    if (pressCount >= 100)
+    {
         longPressFlag = 1;
     }
-    if (button == RELEASED && pressCount >= 100){
-            longPressFlag = 0;
-            pressCount = 0;
+    if (button == RELEASED && pressCount >= 100)
+    {
+        longPressFlag = 0;
+        pressCount = 0;
 
-        }
+    }
 }
 
-void
-initSysTick (void)
+void initSysTick(void)
 {
     //
     // Set up the period for the SysTick timer.  The SysTick timer period is
     // set as a function of the system clock.
-    SysTickPeriodSet (SysCtlClockGet () / SYSTICK_RATE_HZ);
+    SysTickPeriodSet(SysCtlClockGet() / SYSTICK_RATE_HZ);
     //
     // Register the interrupt handler
-    SysTickIntRegister (SysTickIntHandler);
+    SysTickIntRegister(SysTickIntHandler);
     //
     // Enable interrupt and device
-    SysTickIntEnable ();
-    SysTickEnable ();
+    SysTickIntEnable();
+    SysTickEnable();
 }
-
 
 int main(void)
 {
-    initClock ();
+    initClock();
     initAccl();
     DelayInit();
     InitDisplay();
@@ -98,12 +101,15 @@ int main(void)
     initSysTick();
     referenceorientation(&rollRef, &pitchRef);
     UpdateDisplay();
+    uint8_t threshHold = 240;
 
     IntMasterEnable();
 
     while (1)
     {
-        if (checkSwitch(RIGHTSW) == SWUP){
+
+        if (checkSwitch(RIGHTSW) == SWUP)
+        {
             if (checkButton(UP) == PUSHED)
             {
                 stepCount += 100;
@@ -111,30 +117,49 @@ int main(void)
             }
             if (shortPressFlag)
             {
-                if (stepCount < 500){
+                if (stepCount < 500)
+                {
                     stepCount = 0;
 
-                } else {
+                }
+                else
+                {
                     stepCount -= 500;
                 }
 
                 SetView(viewState);
                 shortPressFlag = 0;
             }
-        } else {
-            if (viewState == 2 && shortPressFlag){
-                        goalStepCount = adccircbuffermeancalculator();
-                        viewState = SetView(0);
-                        UpdateDisplay();
-                        shortPressFlag = 0;
-                    }
-            if (viewState != 2 && longPressFlag){
+        }
+        else
+        {
+            if (viewState == 2 && shortPressFlag)
+            {
+                goalStepCount = adccircbuffermeancalculator();
+                viewState = SetView(0);
+                UpdateDisplay();
+                shortPressFlag = 0;
+            }
+            if (viewState != 2 && longPressFlag)
+            {
                 LongPressStart();
                 LongPressEnd();
                 stepCount = 0;
             }
             if (checkButton(UP) == PUSHED)
-                        SwitchUnits();
+                SwitchUnits();
+            circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
+            if (stepFlag)
+            {
+
+                if (addStep() < threshHold)
+                {
+                    stepCount += 1;
+                }
+                stepFlag = 0;
+
+
+            }
         }
 
         if (checkButton(LEFT) == PUSHED)
@@ -145,14 +170,15 @@ int main(void)
 
         if (bufferFlag)
         {
+            writebuffer();
             bufferFlag = 0;
         }
 
-
         if (displayFlag)
         {
-           UpdateDisplay();
-           displayFlag = 0;
+            UpdateDisplay();
+            printf("%d \n", addStep());
+            displayFlag = 0;
         }
     }
 }

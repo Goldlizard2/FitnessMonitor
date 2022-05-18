@@ -57,13 +57,12 @@
 //! \return None.
 //
 //*****************************************************************************
-void
-OLEDStringDraw(char *pcStr, uint32_t ulColumn, uint32_t ulRow)
+void OLEDStringDraw(char *pcStr, uint32_t ulColumn, uint32_t ulRow)
 {
     //-------Use the Orbit Functions:---------
 
-	int charX = ulColumn;	//Char index in X axis. (character column)
-	int charY = ulRow;		//Char index in Y axis. (character row)
+    int charX = ulColumn;	//Char index in X axis. (character column)
+    int charY = ulRow;		//Char index in Y axis. (character row)
 
     //Put the cursor in the right place:
     OrbitOledSetCursor(charX, charY);
@@ -72,7 +71,6 @@ OLEDStringDraw(char *pcStr, uint32_t ulColumn, uint32_t ulRow)
     OrbitOledPutString(pcStr);
 }
 
-
 /*****************************************************************************
  * OLEDInitialise
  *   	return: 	void
@@ -80,17 +78,15 @@ OLEDStringDraw(char *pcStr, uint32_t ulColumn, uint32_t ulRow)
  *
  *   	purpose:	Runs the required initialiser routines for the OLED display
  *****************************************************************************/
-void
-OLEDInitialise (void){
+void OLEDInitialise(void)
+{
 
-	/*
-	 * Initialize the OLED
-	 */
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);    //Need signals on GPIOD
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);    //Need signals on GPIOE
+    /*
+     * Initialize the OLED
+     */
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);    //Need signals on GPIOD
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);    //Need signals on GPIOE
 
-	OrbitOledInit();
+    OrbitOledInit();
 }
-
-
 

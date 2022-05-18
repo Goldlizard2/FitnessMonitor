@@ -80,5 +80,6 @@ writebuffer(void);
 void
 circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z);
 
+int32_t addStep(void);
 
 #endif /*ACC_H*/

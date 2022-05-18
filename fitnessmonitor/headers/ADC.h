@@ -11,9 +11,8 @@ void
 ADCIntHandler(void);
 
 void
-initADC (void);
+initADC(void);
 
 int32_t adccircbuffermeancalculator();
-
 
 #endif /*ADC_H*/

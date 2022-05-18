@@ -20,10 +20,22 @@
 //*****************************************************************************
 // Constants
 //*****************************************************************************
-enum butNames {UP = 0, DOWN, LEFT, RIGHT, NUM_BUTS};
-enum butStates {RELEASED = 0, PUSHED, NO_CHANGE};
-enum swStates {SWDOWN = 0, SWUP, NOSW_CHANGE};
-enum swNames {LEFTSW = 0, RIGHTSW, NUM_SW};
+enum butNames
+{
+    UP = 0, DOWN, LEFT, RIGHT, NUM_BUTS
+};
+enum butStates
+{
+    RELEASED = 0, PUSHED, NO_CHANGE
+};
+enum swStates
+{
+    SWDOWN = 0, SWUP, NOSW_CHANGE
+};
+enum swNames
+{
+    LEFTSW = 0, RIGHTSW, NUM_SW
+};
 // UP button
 #define UP_BUT_PERIPH  SYSCTL_PERIPH_GPIOE
 #define UP_BUT_PORT_BASE  GPIO_PORTE_BASE
@@ -55,7 +67,6 @@ enum swNames {LEFTSW = 0, RIGHTSW, NUM_SW};
 #define RIGHT_SW_PIN  GPIO_PIN_7
 #define RIGHT_SW_NORMAL  false
 
-
 #define NUM_BUT_POLLS 3
 #define NUM_SW_POLLS 3
 // Debounce algorithm: A state machine is associated with each button.
@@ -67,7 +78,7 @@ enum swNames {LEFTSW = 0, RIGHTSW, NUM_SW};
 // initButtons: Initialise the variables associated with the set of buttons
 // defined by the constants above.
 void
-initButtons (void);
+initButtons(void);
 
 // *******************************************************
 // updateButtons: Function designed to be called regularly. It polls all
@@ -75,10 +86,10 @@ initButtons (void);
 // necessary.  It is efficient enough to be part of an ISR, e.g. from
 // a SysTick interrupt.
 void
-updateButtons (void);
+updateButtons(void);
 
 void
-updateSwitches (void);
+updateSwitches(void);
 
 // *******************************************************
 // checkButton: Function returns the new button state if the button state
@@ -86,9 +97,9 @@ updateSwitches (void);
 // NO_CHANGE.  The argument butName should be one of constants in the
 // enumeration butStates, excluding 'NUM_BUTS'. Safe under interrupt.
 uint8_t
-checkButton (uint8_t butName);
+checkButton(uint8_t butName);
 
 uint8_t
-checkSwitch (uint8_t swName);
+checkSwitch(uint8_t swName);
 
 #endif /*BUTTONS_H_*/

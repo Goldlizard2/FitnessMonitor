@@ -151,6 +151,13 @@ referenceorientation(int32_t *roll, int32_t *pitch)
 
 }
 
+int32_t addStep(void)
+{
+    int32_t accVector = 0;
+    accVector = sqrt(pow(mean_x,2)+pow(mean_y, 2)+pow(mean_z, 2));
+    return accVector;
+}
+
 
 
 

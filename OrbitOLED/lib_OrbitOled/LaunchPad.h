@@ -12,8 +12,6 @@
  *
  */
 
-
-
 #ifndef LAUNCHPAD_H_
 #define LAUNCHPAD_H_
 
@@ -105,7 +103,6 @@
 //#include "utils/softuart.h"
 //#include "utils/uartstdio.h"
 //#include "utils/ustdlib.h"
-
 /*
  * On board button (switch) definitions
  */
@@ -114,8 +111,5 @@
 #define lpSW2Port	GPIO_PORTF_BASE
 #define lpSW1		GPIO_PIN_4
 #define lpSW2		GPIO_PIN_0
-
-
-
 
 #endif /* LAUNCHPAD_H_ */

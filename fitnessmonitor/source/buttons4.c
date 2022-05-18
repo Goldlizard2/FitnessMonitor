@@ -194,15 +194,9 @@ checkButton (uint8_t butName)
 uint8_t
 checkSwitch (uint8_t swName)
 {
-    /*uint8_t current_state
-    if (sw_flag[swName])
-    {
-        sw_flag[swName] = false;*/
         if (sw_state[swName] == sw_normal[swName])
             return SWDOWN;
         else
             return SWUP;
-    //}
-    //return NOSW_CHANGE;
 }
 

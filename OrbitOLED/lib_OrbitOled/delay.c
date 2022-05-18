@@ -18,7 +18,6 @@
 /*																		*/
 /************************************************************************/
 
-
 /* ------------------------------------------------------------ */
 /*				Include File Definitions						*/
 /* ------------------------------------------------------------ */
@@ -31,98 +30,93 @@
 /*				Local Type Definitions							*/
 /* ------------------------------------------------------------ */
 
-
 /* ------------------------------------------------------------ */
 /*				Global Variables								*/
 /* ------------------------------------------------------------ */
-
 
 /* ------------------------------------------------------------ */
 /*				Local Variables									*/
 /* ------------------------------------------------------------ */
 
-
 /* ------------------------------------------------------------ */
 /*				Forward Declarations							*/
 /* ------------------------------------------------------------ */
-
 
 /* ------------------------------------------------------------ */
 /*				Procedure Definitions							*/
 /* ------------------------------------------------------------ */
 /***	DelayInit
-**
-**	Parameters:
-**		none
-**
-**	Return Value:
-**		none
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Initialized the hardware for use by delay functions. This
-**		initializes Timer 1 to count
-*/
+ **
+ **	Parameters:
+ **		none
+ **
+ **	Return Value:
+ **		none
+ **
+ **	Errors:
+ **		none
+ **
+ **	Description:
+ **		Initialized the hardware for use by delay functions. This
+ **		initializes Timer 1 to count
+ */
 
-void
-DelayInit()	
-	{
+void DelayInit()
+{
 
-	/* Configure Timer 1. 
-	*/
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
+    /* Configure Timer 1. 
+     */
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
 
-	TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC_UP);
-	TimerEnable(TIMER1_BASE, TIMER_A);
-
+    TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC_UP);
+    TimerEnable(TIMER1_BASE, TIMER_A);
 
 }
 
 /* ------------------------------------------------------------ */
 /***	DelayMs
-**
-**	Parameters:
-**		cms			- number of milliseconds to delay
-**
-**	Return Value:
-**		none
-**
-**	Errors:
-**		none
-**
-**	Description:
-**		Delay the requested number of milliseconds. Uses Timer1.
-*/
+ **
+ **	Parameters:
+ **		cms			- number of milliseconds to delay
+ **
+ **	Return Value:
+ **		none
+ **
+ **	Errors:
+ **		none
+ **
+ **	Description:
+ **		Delay the requested number of milliseconds. Uses Timer1.
+ */
 
-void
-DelayMs(int cms)
-	{
-	int		ims;
+void DelayMs(int cms)
+{
+    int ims;
 
-	for (ims=0; ims<cms; ims++) {
-		/*
-		 * Clear Timer1
-		 */
-		HWREG(TIMER1_BASE + TIMER_O_TAV) = 0;
-		while (TimerValueGet(TIMER1_BASE, TIMER_A) < cntMsDelay);
-	}
+    for (ims = 0; ims < cms; ims++)
+    {
+        /*
+         * Clear Timer1
+         */
+        HWREG(TIMER1_BASE + TIMER_O_TAV) = 0;
+        while (TimerValueGet(TIMER1_BASE, TIMER_A) < cntMsDelay)
+            ;
+    }
 
-}		
+}
 
 /* ------------------------------------------------------------ */
 /***	ProcName
-**
-**	Parameters:
-**
-**	Return Value:
-**
-**	Errors:
-**
-**	Description:
-**
-*/
+ **
+ **	Parameters:
+ **
+ **	Return Value:
+ **
+ **	Errors:
+ **
+ **	Description:
+ **
+ */
 
 /* ------------------------------------------------------------ */
 
