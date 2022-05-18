@@ -57,6 +57,9 @@
 circBuf_t buffer_x;
 circBuf_t buffer_y;
 circBuf_t buffer_z;
+int32_t last_mean_x;
+int32_t last_mean_y;
+int32_t last_mean_z;
 int32_t mean_x;
 int32_t mean_y;
 int32_t mean_z;

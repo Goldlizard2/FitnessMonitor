@@ -120,9 +120,6 @@ circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z)
     sum_x = 0;
     sum_y = 0;
     sum_z = 0;
-    *mean_x = 0;
-    *mean_y = 0;
-    *mean_z = 0;
     j = 0;
     for (j = 0; j < BUF_SIZE; j++)
     {
@@ -130,9 +127,16 @@ circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z)
         sum_y = sum_y + readCircBuf (&buffer_y);
         sum_z = sum_z + readCircBuf (&buffer_z);
     }
-    *mean_x = sum_x/BUF_SIZE;
-    *mean_y = sum_y/BUF_SIZE;
-    *mean_z = sum_z/BUF_SIZE;
+
+    if (*mean_x != sum_x/BUF_SIZE)
+    {
+        last_mean_x = *mean_x;
+        last_mean_y = *mean_y;
+        last_mean_z = *mean_z;
+        *mean_x = sum_x/BUF_SIZE;
+        *mean_y = sum_y/BUF_SIZE;
+        *mean_z = sum_z/BUF_SIZE;
+    }
 }
 
 void
@@ -154,7 +158,7 @@ referenceorientation(int32_t *roll, int32_t *pitch)
 int32_t addStep(void)
 {
     int32_t accVector = 0;
-    accVector = sqrt(pow(mean_x,2)+pow(mean_y, 2)+pow(mean_z, 2));
+    accVector = sqrt(pow(mean_x - last_mean_x,2)+pow(mean_y - last_mean_y, 2)+pow(mean_z - last_mean_z, 2));
     return accVector;
 }
 

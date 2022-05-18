@@ -18,7 +18,7 @@
 #include <lib_OrbitOled/delay.h>
 #include <sys/_stdint.h>
 
-#define SYSTICK_RATE_HZ 50
+#define SYSTICK_RATE_HZ 100
 uint8_t longPressFlag = 0;
 uint8_t shortPressFlag = 0;
 uint8_t stepFlag = 0;
@@ -40,6 +40,7 @@ void SysTickIntHandler(void)
     tickCount++;
     updateButtons();
     updateSwitches();
+    bufferFlag = 1;
 
     if (tickCount == 50)
     {
@@ -47,9 +48,8 @@ void SysTickIntHandler(void)
         displayFlag = 1;
     }
 
-    if (tickCount % 20 == 0)
+    if (tickCount % 5 == 0)
     {
-        bufferFlag = 1;
         stepFlag = 1;
     }
 
@@ -92,7 +92,6 @@ void initSysTick(void)
 
 int main(void)
 {
-    int16_t dataMean = 0;
     int32_t magnitude = 0;
     initClock();
     initAccl();
@@ -103,18 +102,10 @@ int main(void)
     initSysTick();
     referenceorientation(&rollRef, &pitchRef);
     UpdateDisplay();
-    uint8_t threshHold = 2;
+    uint8_t threshHold = 60;
     uint8_t aboveThreshHold = 0;
 
     IntMasterEnable();
-
-    int8_t i;
-    for (i = 0; i < 5; i++)
-    {
-        circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
-        dataMean += addStep();
-    }
-    dataMean /= 5;
 
     while (1)
     {
@@ -159,17 +150,18 @@ int main(void)
             }
             if (checkButton(UP) == PUSHED)
                 SwitchUnits();
-            circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
             if (stepFlag)
             {
+                circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
+
                 magnitude = addStep();
-                if ((magnitude - dataMean) > threshHold && aboveThreshHold == 0)
+                if (magnitude > threshHold && aboveThreshHold == 0)
                 {
-                    stepCount += 2;
+                    stepCount += 1;
                     aboveThreshHold = 1;
                 }
 
-                if ((magnitude - dataMean) < threshHold)
+                if (magnitude < threshHold)
                     aboveThreshHold = 0;
 
                 stepFlag = 0;
