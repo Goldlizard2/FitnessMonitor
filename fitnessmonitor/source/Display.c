@@ -144,6 +144,16 @@ void SwitchUnits()
     OLEDStringDraw("                                                                ", 0, 0);
 }
 
+void Congratulations()
+{
+    OLEDStringDraw("                                                                ", 0, 0);
+    OLEDStringDraw("CONGRATULATIONS", 1, 0);
+    OLEDStringDraw("STEP GOAL", 4, 1);
+    OLEDStringDraw("ACHIEVED", 4, 2);
+    DelayMs(1100);
+    OLEDStringDraw("                                                                ", 0, 0);
+}
+
 // dpending on the current viewnumber display the appropriate format
 void UpdateDisplay()
 {

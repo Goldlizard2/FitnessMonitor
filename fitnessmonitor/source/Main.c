@@ -24,6 +24,7 @@
 uint8_t longPressFlag = 0;
 uint8_t shortPressFlag = 0;
 uint8_t stepFlag = 0;
+uint8_t congratsFLag = 1;
 
 void initClock(void)
 {
@@ -149,6 +150,7 @@ int main(void)
                 LongPressStart();
                 LongPressEnd();
                 stepCount = 0;
+                congratsFLag = 1;
             }
             if (checkButton(UP) == PUSHED)
                 SwitchUnits();
@@ -170,6 +172,12 @@ int main(void)
 
 
             }
+        }
+
+        if (stepCount == goalStepCount && congratsFLag)
+        {
+            Congratulations();
+            congratsFLag = 0;
         }
 
         if (checkButton(LEFT) == PUSHED)

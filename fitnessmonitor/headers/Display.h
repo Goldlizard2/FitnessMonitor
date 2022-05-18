@@ -22,5 +22,6 @@ void SwitchUnits();
 void LongPressStart();
 void LongPressEnd();
 void UpdateDisplay();
+void Congratulations();
 
 #endif
