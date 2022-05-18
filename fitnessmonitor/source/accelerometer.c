@@ -23,7 +23,7 @@ void displayUpdate (char *str1, char *str2, int16_t num, uint8_t charLine);
 void initAccl (void);
 void referenceorientation(int32_t *roll, int32_t *pitch);
 
-#define BUF_SIZE 20
+#define BUF_SIZE 10
 
 void
 initAccl (void)

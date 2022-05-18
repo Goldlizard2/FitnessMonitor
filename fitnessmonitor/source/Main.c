@@ -15,10 +15,10 @@
 #include <headers/buttons4.h>
 #include <headers/Display.h>
 #include <inc/hw_memmap.h>
-#include <../OrbitOLED/lib_OrbitOled/delay.h>
+#include <lib_OrbitOled/delay.h>
 #include <sys/_stdint.h>
 
-#define SYSTICK_RATE_HZ 100
+#define SYSTICK_RATE_HZ 50
 uint8_t longPressFlag = 0;
 uint8_t shortPressFlag = 0;
 uint8_t stepFlag = 0;
@@ -37,20 +37,20 @@ void SysTickIntHandler(void)
     static int32_t pressCount = 0;
     static uint16_t tickCount = 0;
     uint8_t button;
-    stepFlag = 1;
     tickCount++;
     updateButtons();
     updateSwitches();
+
     if (tickCount == 50)
     {
-
         tickCount = 0;
         displayFlag = 1;
-
     }
-    if (tickCount % 10 == 0)
+
+    if (tickCount % 20 == 0)
     {
         bufferFlag = 1;
+        stepFlag = 1;
     }
 
     button = checkButton(DOWN);
@@ -92,6 +92,8 @@ void initSysTick(void)
 
 int main(void)
 {
+    int16_t dataMean = 0;
+    int32_t magnitude = 0;
     initClock();
     initAccl();
     DelayInit();
@@ -101,9 +103,18 @@ int main(void)
     initSysTick();
     referenceorientation(&rollRef, &pitchRef);
     UpdateDisplay();
-    uint8_t threshHold = 240;
+    uint8_t threshHold = 2;
+    uint8_t aboveThreshHold = 0;
 
     IntMasterEnable();
+
+    int8_t i;
+    for (i = 0; i < 5; i++)
+    {
+        circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
+        dataMean += addStep();
+    }
+    dataMean /= 5;
 
     while (1)
     {
@@ -151,11 +162,16 @@ int main(void)
             circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
             if (stepFlag)
             {
-
-                if (addStep() < threshHold)
+                magnitude = addStep();
+                if ((magnitude - dataMean) > threshHold && aboveThreshHold == 0)
                 {
-                    stepCount += 1;
+                    stepCount += 2;
+                    aboveThreshHold = 1;
                 }
+
+                if ((magnitude - dataMean) < threshHold)
+                    aboveThreshHold = 0;
+
                 stepFlag = 0;
 
 
@@ -176,8 +192,8 @@ int main(void)
 
         if (displayFlag)
         {
+            printf("%d\n", stepCount);
             UpdateDisplay();
-            printf("%d \n", addStep());
             displayFlag = 0;
         }
     }
