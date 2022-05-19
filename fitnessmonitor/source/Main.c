@@ -1,8 +1,7 @@
-// Author: Nissa Absalom And Okoko Anainga
-// Last modified: 26/3/2022
+// Author: Nissa Absalom and Okoko Anainga
+// Last modified: 19/5/2022
 // Project: ENCE361 project
-// Description: This is a main file used for testing the "Display" module
-//              as well as providing the beginnings of milestone 1.
+// Description: This is the main file for the ENCE321 Fitness Monitor Project
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -18,9 +17,12 @@
 #include <../OrbitOLED/lib_OrbitOled/delay.h>
 #include <sys/_stdint.h>
 
+// Constants
 #define SYSTICK_RATE_HZ 100
 #define UPPERTHRESHOLD 60
 #define LOWERTHRESHOLD 35
+
+// Vars
 uint8_t longPressFlag = 0;
 uint8_t shortPressFlag = 0;
 uint8_t stepFlag = 0;
@@ -35,7 +37,6 @@ void initClock(void)
 
 void SysTickIntHandler(void)
 {
-
     ADCProcessorTrigger(ADC0_BASE, 3);
     static int32_t pressCount = 0;
     static uint16_t tickCount = 0;
@@ -45,12 +46,14 @@ void SysTickIntHandler(void)
     updateSwitches();
     bufferFlag = 1;
 
+    // Set displayFlag at 2Hz
     if (tickCount == 50)
     {
         tickCount = 0;
         displayFlag = 1;
     }
 
+    // Set stepFlag at 20Hz
     if (tickCount % 5 == 0)
     {
         stepFlag = 1;
@@ -61,20 +64,22 @@ void SysTickIntHandler(void)
     {
         pressCount++;
     }
+
     if (button == RELEASED && pressCount < 100)
     {
         shortPressFlag = 1;
         pressCount = 0;
     }
+
     if (pressCount >= 100)
     {
         longPressFlag = 1;
     }
+
     if (button == RELEASED && pressCount >= 100)
     {
         longPressFlag = 0;
         pressCount = 0;
-
     }
 }
 
@@ -96,6 +101,9 @@ void initSysTick(void)
 int main(void)
 {
     int32_t magnitude = 0;
+    uint8_t aboveThreshHold = 0;
+
+    // Initializes all modules used
     initClock();
     initAccl();
     DelayInit();
@@ -103,16 +111,13 @@ int main(void)
     initButtons();
     initADC();
     initSysTick();
-    referenceorientation(&rollRef, &pitchRef);
     UpdateDisplay();
-    uint8_t aboveThreshHold = 0;
-
 
     IntMasterEnable();
 
+    // Main while loop, handles all tasks
     while (1)
     {
-
         if (checkSwitch(RIGHTSW) == SWUP)
         {
             if (checkButton(UP) == PUSHED)
@@ -120,12 +125,12 @@ int main(void)
                 stepCount += 100;
                 SetView(viewState);
             }
+
             if (shortPressFlag)
             {
                 if (stepCount < 500)
                 {
                     stepCount = 0;
-
                 }
                 else
                 {
@@ -156,9 +161,9 @@ int main(void)
                 SwitchUnits();
             if (stepFlag)
             {
-                circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
+                circbuffermeancalculator();
 
-                magnitude = addStep();
+                magnitude = calculatemag();
                 if (magnitude > UPPERTHRESHOLD && aboveThreshHold == 0)
                 {
                     stepCount += 1;
@@ -169,7 +174,6 @@ int main(void)
                     aboveThreshHold = 0;
 
                 stepFlag = 0;
-
 
             }
         }
@@ -199,4 +203,3 @@ int main(void)
         }
     }
 }
-

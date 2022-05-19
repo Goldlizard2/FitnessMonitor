@@ -70,10 +70,6 @@ int32_t rollRef;
 bool displayFlag;
 bool bufferFlag;
 
-
-void
-referenceorientation(int32_t *roll, int32_t *pitch);
-
 void
 initAccl (void);
 
@@ -81,8 +77,8 @@ void
 writebuffer(void);
 
 void
-circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z);
+circbuffermeancalculator();
 
-int32_t addStep(void);
+int32_t calculatemag(void);
 
 #endif /*ACC_H*/

@@ -1,23 +1,22 @@
-// Author: Nissa Absalom
-// Last modified: 26/3/2022
+// Author: Nissa Absalom and Okoko Anainga
+// Last modified: 19/5/2022
 // Project: ENCE361 project
-// Description: Displays data for milestone 1.
+// Description: Header file for display module
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include <stdio.h>
 #include <stdbool.h>
 
-// current view number and state
+// Public vars
+int32_t goalStepCount;
 uint8_t viewState;
 int32_t stepCount;
-int32_t goalStepCount;
-int32_t newGoalStepCount;
 
-
+// Public functions
 void InitDisplay();
+int SetView(uint8_t newView);
 int NextView();
 int PrevView();
-int SetView(uint8_t newView);
 void SwitchUnits();
 void LongPressStart();
 void LongPressEnd();

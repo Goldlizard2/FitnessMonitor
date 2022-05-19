@@ -18,20 +18,14 @@
 #include "headers/acc.h"
 #include "headers/i2c_driver.h"
 
-
-void displayUpdate (char *str1, char *str2, int16_t num, uint8_t charLine);
-void initAccl (void);
-void referenceorientation(int32_t *roll, int32_t *pitch);
-
 #define BUF_SIZE 10
 
-void
-initAccl (void)
+void initAccl(void)
 {
-    initCircBuf (&buffer_x, BUF_SIZE);
-    initCircBuf (&buffer_y, BUF_SIZE);
-    initCircBuf (&buffer_z, BUF_SIZE);
-    char    toAccl[] = {0, 0};  // parameter, value
+    initCircBuf(&buffer_x, BUF_SIZE);
+    initCircBuf(&buffer_y, BUF_SIZE);
+    initCircBuf(&buffer_z, BUF_SIZE);
+    char toAccl[] = { 0, 0 };  // parameter, value
 
     /*
      * Enable I2C Peripheral
@@ -67,7 +61,6 @@ initAccl (void)
     toAccl[1] = ACCL_MEASURE;
     I2CGenTransmit(toAccl, 1, WRITE, ACCL_ADDR);
 
-
     toAccl[0] = ACCL_BW_RATE;
     toAccl[1] = ACCL_RATE_100HZ;
     I2CGenTransmit(toAccl, 1, WRITE, ACCL_ADDR);
@@ -89,79 +82,57 @@ initAccl (void)
     I2CGenTransmit(toAccl, 1, WRITE, ACCL_ADDR);
 }
 
-/********************************************************
-* Function to read accelerometer
-********************************************************/
-void
-writebuffer(void)
+/*************************************************************
+ * Function to read accelerometer and write to circular buffer
+ *************************************************************/
+void writebuffer(void)
 {
-
 
     uint8_t bytesToRead = 6;
 
-    char    fromAccl[] = {0, 0, 0, 0, 0, 0, 0};
+    char fromAccl[] = { 0, 0, 0, 0, 0, 0, 0 };
 
     fromAccl[0] = ACCL_DATA_X0;
     I2CGenTransmit(fromAccl, bytesToRead, READ, ACCL_ADDR);
 
-    writeCircBuf (&buffer_x, (fromAccl[2] << 8) | fromAccl[1]);
-    writeCircBuf (&buffer_y, (fromAccl[4] << 8) | fromAccl[3]);
-    writeCircBuf (&buffer_z, (fromAccl[6] << 8) | fromAccl[5]);
+    writeCircBuf(&buffer_x, (fromAccl[2] << 8) | fromAccl[1]);
+    writeCircBuf(&buffer_y, (fromAccl[4] << 8) | fromAccl[3]);
+    writeCircBuf(&buffer_z, (fromAccl[6] << 8) | fromAccl[5]);
 
 }
 
-void
-circbuffermeancalculator(int32_t *mean_x, int32_t *mean_y, int32_t *mean_z)
+void circbuffermeancalculator()
 {
-    uint16_t j ;
-    int32_t sum_x;
-    int32_t sum_y;
-    int32_t sum_z;
-    sum_x = 0;
-    sum_y = 0;
-    sum_z = 0;
-    j = 0;
+    uint8_t j = 0;
+    int32_t sum_x = 0;
+    int32_t sum_y = 0;
+    int32_t sum_z = 0;
+
     for (j = 0; j < BUF_SIZE; j++)
     {
-        sum_x = sum_x + readCircBuf (&buffer_x);
-        sum_y = sum_y + readCircBuf (&buffer_y);
-        sum_z = sum_z + readCircBuf (&buffer_z);
+        sum_x = sum_x + readCircBuf(&buffer_x);
+        sum_y = sum_y + readCircBuf(&buffer_y);
+        sum_z = sum_z + readCircBuf(&buffer_z);
     }
 
-    if (*mean_x != sum_x/BUF_SIZE)
+    // Avoids mean and last_mean being equal
+    if (mean_x != sum_x / BUF_SIZE || mean_y != sum_y / BUF_SIZE
+            || mean_z != sum_z / BUF_SIZE)
     {
-        last_mean_x = *mean_x;
-        last_mean_y = *mean_y;
-        last_mean_z = *mean_z;
-        *mean_x = sum_x/BUF_SIZE;
-        *mean_y = sum_y/BUF_SIZE;
-        *mean_z = sum_z/BUF_SIZE;
+        last_mean_x = mean_x;
+        last_mean_y = mean_y;
+        last_mean_z = mean_z;
+        mean_x = sum_x / BUF_SIZE;
+        mean_y = sum_y / BUF_SIZE;
+        mean_z = sum_z / BUF_SIZE;
     }
 }
 
-void
-referenceorientation(int32_t *roll, int32_t *pitch)
-{
-    mean_x = 0;
-    mean_y = 0;
-    mean_z = 0;
-    uint16_t i ;
-    for (i=0; i < BUF_SIZE; i++)
-        writebuffer();
-    circbuffermeancalculator(&mean_x, &mean_y, &mean_z);
-
-    *roll = (atan2(mean_y,mean_z))*1000;
-    *pitch = (atan2(-mean_x,(sqrt((mean_y*mean_y) + (mean_z*mean_z)))))*1000;
-
-}
-
-int32_t addStep(void)
+int32_t calculatemag(void)
 {
     int32_t accVector = 0;
-    accVector = sqrt(pow(mean_x - last_mean_x,2)+pow(mean_y - last_mean_y, 2)+pow(mean_z - last_mean_z, 2));
+    accVector = sqrt(
+            pow(mean_x - last_mean_x, 2) + pow(mean_y - last_mean_y, 2)
+                    + pow(mean_z - last_mean_z, 2));
     return accVector;
 }
-
-
-
-
