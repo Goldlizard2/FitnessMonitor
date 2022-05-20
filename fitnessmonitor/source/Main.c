@@ -178,7 +178,7 @@ int main(void)
             }
         }
 
-        if (stepCount == goalStepCount && congratsFLag)
+        if (stepCount >= goalStepCount && congratsFLag)
         {
             Congratulations();
             congratsFLag = 0;
